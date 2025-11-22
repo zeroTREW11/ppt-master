@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingCart, User, Heart, Search, Menu, X, Star, Check, Phone, Mail, MapPin, ArrowRight, Play, Download, Plus, Minus, Trash2, ExternalLink } from 'lucide-react';
+import { ShoppingCart, Menu, X, Star, Check, Phone, Mail, MapPin, ArrowRight, Plus, Minus, Trash2, ExternalLink } from 'lucide-react';
 
 export default function AscendiaEcommerce() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -273,12 +273,10 @@ export default function AscendiaEcommerce() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4 text-white">Pricelist</h2>
-              <div className="flex items-center justify-between mb-3">
-                <div>
-                  <div className="text-lg font-bold text-white">Rp {template.price.toLocaleString()}</div>
-                  {/* Baris "sold" dihapus */}
-                </div>
-            </div>
+              <div className="text-center mb-16">
+                <h2 className="text-4xl font-bold mb-4 text-white">Pricelist</h2>
+                <p className="text-gray-400 text-lg">Simple, clear pricing for your first pro template</p>
+              </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
