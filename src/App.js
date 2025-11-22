@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  ShoppingCart, User, Menu, X, Star, Check, Phone, Mail, MapPin, 
-  ArrowRight, Plus, Minus, Trash2, ExternalLink, LogIn, Lock, 
-  AlertTriangle, Settings, DollarSign 
+  ShoppingCart, User, Menu, X, Star, Check, Phone, Mail,  
+  ArrowRight, Plus, Minus, Trash2, ExternalLink,DollarSign 
 } from 'lucide-react';
 
 // Supabase Client (pastikan sudah buat file terpisah)
