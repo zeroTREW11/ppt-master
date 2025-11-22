@@ -7,27 +7,270 @@ export default function AscendiaEcommerce() {
   const [selectedMaterial, setSelectedMaterial] = useState('ALL');
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
+  const [previewTemplate, setPreviewTemplate] = useState(null);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
 
   const categories = ['ALL', 'STANDARD', 'PREMIUM'];
   const materialFilters = ['ALL', 'WITH MATERIALS', 'WITHOUT MATERIALS'];
 
+  // Data template + preview slides (4-5 foto per template)
   const templates = [
-    { id: 1, name: 'Corporate Business Pro', price: 10000, category: 'STANDARD', materials: true, rating: 4.8, sales: 150, slides: 10, description: 'Professional corporate presentation' },
-    { id: 2, name: 'Startup Pitch Essential', price: 10000, category: 'STANDARD', materials: true, rating: 4.7, sales: 120, slides: 10, description: 'Perfect for startup pitches' },
-    { id: 3, name: 'Education Plus', price: 10000, category: 'STANDARD', materials: true, rating: 4.9, sales: 200, slides: 10, description: 'Engaging educational content' },
-    { id: 4, name: 'Marketing Basic', price: 10000, category: 'STANDARD', materials: true, rating: 4.6, sales: 95, slides: 10, description: 'Marketing presentations' },
-    { id: 5, name: 'Business Classic', price: 15000, category: 'STANDARD', materials: false, rating: 4.8, sales: 180, slides: 10, description: 'Classic business template' },
-    { id: 6, name: 'Minimal Professional', price: 15000, category: 'STANDARD', materials: false, rating: 4.7, sales: 140, slides: 10, description: 'Clean minimal design' },
-    { id: 7, name: 'Corporate Simple', price: 15000, category: 'STANDARD', materials: false, rating: 4.9, sales: 160, slides: 10, description: 'Simple corporate style' },
-    { id: 8, name: 'Startup Lite', price: 15000, category: 'STANDARD', materials: false, rating: 4.6, sales: 110, slides: 10, description: 'Lightweight startup deck' },
-    { id: 9, name: 'Executive Suite Pro', price: 20000, category: 'PREMIUM', materials: true, rating: 5.0, sales: 300, slides: 10, description: 'Premium executive presentations' },
-    { id: 10, name: 'Investor Deck Elite', price: 20000, category: 'PREMIUM', materials: true, rating: 5.0, sales: 250, slides: 10, description: 'Elite investor pitch deck' },
-    { id: 11, name: 'Brand Master', price: 20000, category: 'PREMIUM', materials: true, rating: 4.9, sales: 280, slides: 10, description: 'Premium branding template' },
-    { id: 12, name: 'Creative Pro Plus', price: 20000, category: 'PREMIUM', materials: true, rating: 4.9, sales: 220, slides: 10, description: 'Creative professional design' },
-    { id: 13, name: 'Executive Premium', price: 25000, category: 'PREMIUM', materials: false, rating: 5.0, sales: 320, slides: 10, description: 'Top-tier executive template' },
-    { id: 14, name: 'Luxury Business', price: 25000, category: 'PREMIUM', materials: false, rating: 5.0, sales: 290, slides: 10, description: 'Luxury business presentation' },
-    { id: 15, name: 'Elite Corporate', price: 25000, category: 'PREMIUM', materials: false, rating: 4.9, sales: 310, slides: 10, description: 'Elite corporate design' },
-    { id: 16, name: 'Premium Pitch Deck', price: 25000, category: 'PREMIUM', materials: false, rating: 5.0, sales: 270, slides: 10, description: 'Premium pitch presentation' },
+    {
+      id: 1,
+      name: 'Corporate Business Pro',
+      price: 10000,
+      category: 'STANDARD',
+      materials: true,
+      rating: 4.8,
+      slides: 10,
+      description: 'Professional corporate presentation',
+      previewSlides: [
+        '/images/Classic GT40.jpg',
+        '/images/dodge-challenger-srt-hellcat-redye-widebody-2022-5k-8k-7680x5157-8418.jpg',
+        '/images/ferrari-812-7680x5239-12846.jpg',
+        '/images/hennessey-venom-f5-4953x3302-12646.jpeg'
+      ]
+    },
+    {
+      id: 2,
+      name: 'Startup Pitch Essential',
+      price: 10000,
+      category: 'STANDARD',
+      materials: true,
+      rating: 4.7,
+      slides: 10,
+      description: 'Perfect for startup pitches',
+      previewSlides: [
+        '/images/dodge-charger-5120x2880-23634.jpg',
+        '/images/ford-mustang-gtd-7680x4320-12738.jpg',
+        '/images/pagani-zonda-f-7680x4320-20306.jpg',
+        '/images/ringbrothers-aston-5120x2880-23764.jpg'
+      ]
+    },
+    {
+      id: 3,
+      name: 'Education Plus',
+      price: 10000,
+      category: 'STANDARD',
+      materials: true,
+      rating: 4.9,
+      slides: 10,
+      description: 'Engaging educational content',
+      previewSlides: [
+        '/images/dodge-viper-srt-gts-5120x2880-23048.jpg',
+        '/images/ferrari-812-7928x4983-13024.jpg',
+        '/images/hennessey-venom-f5-8256x5504-10169.jpg',
+        '/images/MERCEDES.jpg'
+      ]
+    },
+    {
+      id: 4,
+      name: 'Marketing Basic',
+      price: 10000,
+      category: 'STANDARD',
+      materials: true,
+      rating: 4.6,
+      slides: 10,
+      description: 'Marketing presentations',
+      previewSlides: [
+        '/images/ferrari-f80-7680x4320-23811.jpg',
+        '/images/hennessey-dodge-7680x4320-14763.jpg',
+        '/images/hennessey-vesnom-f5-4953x3302-12646.jpg',
+        '/images/Classic GT40.jpg'
+      ]
+    },
+    {
+      id: 5,
+      name: 'Business Classic',
+      price: 15000,
+      category: 'STANDARD',
+      materials: false,
+      rating: 4.8,
+      slides: 10,
+      description: 'Classic business template',
+      previewSlides: [
+        '/images/dodge-challenger-srt-hellcat-redye-widebody-2022-5k-8k-7680x5157-8418.jpg',
+        '/images/ferrari-812-7680x5239-12846.jpg',
+        '/images/hennessey-venom-f5-4953x3302-12646.jpeg',
+        '/images/pagani-zonda-f-7680x4320-20306.jpg'
+      ]
+    },
+    {
+      id: 6,
+      name: 'Minimal Professional',
+      price: 15000,
+      category: 'STANDARD',
+      materials: false,
+      rating: 4.7,
+      slides: 10,
+      description: 'Clean minimal design',
+      previewSlides: [
+        '/images/dodge-charger-5120x2880-23634.jpg',
+        '/images/ford-mustang-gtd-7680x4320-12738.jpg',
+        '/images/ringbrothers-aston-5120x2880-23764.jpg',
+        '/images/ferrari-812-7928x4983-13024.jpg'
+      ]
+    },
+    {
+      id: 7,
+      name: 'Corporate Simple',
+      price: 15000,
+      category: 'STANDARD',
+      materials: false,
+      rating: 4.9,
+      slides: 10,
+      description: 'Simple corporate style',
+      previewSlides: [
+        '/images/dodge-viper-srt-gts-5120x2880-23048.jpg',
+        '/images/ferrari-f80-7680x4320-23811.jpg',
+        '/images/hennessey-dodge-7680x4320-14763.jpg',
+        '/images/MERCEDES.jpg'
+      ]
+    },
+    {
+      id: 8,
+      name: 'Startup Lite',
+      price: 15000,
+      category: 'STANDARD',
+      materials: false,
+      rating: 4.6,
+      slides: 10,
+      description: 'Lightweight startup deck',
+      previewSlides: [
+        '/images/ferrari-812-7680x5239-12846.jpg',
+        '/images/hennessey-venom-f5-8256x5504-10169.jpg',
+        '/images/Classic GT40.jpg',
+        '/images/dodge-challenger-srt-hellcat-redye-widebody-2022-5k-8k-7680x5157-8418.jpg'
+      ]
+    },
+    {
+      id: 9,
+      name: 'Executive Suite Pro',
+      price: 20000,
+      category: 'PREMIUM',
+      materials: true,
+      rating: 5.0,
+      slides: 10,
+      description: 'Premium executive presentations',
+      previewSlides: [
+        '/images/ferrari-812-7928x4983-13024.jpg',
+        '/images/hennessey-venom-f5-4953x3302-12646.jpeg',
+        '/images/pagani-zonda-f-7680x4320-20306.jpg',
+        '/images/ringbrothers-aston-5120x2880-23764.jpg'
+      ]
+    },
+    {
+      id: 10,
+      name: 'Investor Deck Elite',
+      price: 20000,
+      category: 'PREMIUM',
+      materials: true,
+      rating: 5.0,
+      slides: 10,
+      description: 'Elite investor pitch deck',
+      previewSlides: [
+        '/images/dodge-charger-5120x2880-23634.jpg',
+        '/images/ford-mustang-gtd-7680x4320-12738.jpg',
+        '/images/hennessey-dodge-7680x4320-14763.jpg',
+        '/images/ferrari-f80-7680x4320-23811.jpg'
+      ]
+    },
+    {
+      id: 11,
+      name: 'Brand Master',
+      price: 20000,
+      category: 'PREMIUM',
+      materials: true,
+      rating: 4.9,
+      slides: 10,
+      description: 'Premium branding template',
+      previewSlides: [
+        '/images/dodge-viper-srt-gts-5120x2880-23048.jpg',
+        '/images/ferrari-812-7680x5239-12846.jpg',
+        '/images/hennessey-venom-f5-8256x5504-10169.jpg',
+        '/images/MERCEDES.jpg'
+      ]
+    },
+    {
+      id: 12,
+      name: 'Creative Pro Plus',
+      price: 20000,
+      category: 'PREMIUM',
+      materials: true,
+      rating: 4.9,
+      slides: 10,
+      description: 'Creative professional design',
+      previewSlides: [
+        '/images/ferrari-812-7928x4983-13024.jpg',
+        '/images/hennessey-venom-f5-4953x3302-12646.jpeg',
+        '/images/pagani-zonda-f-7680x4320-20306.jpg',
+        '/images/Classic GT40.jpg'
+      ]
+    },
+    {
+      id: 13,
+      name: 'Executive Premium',
+      price: 25000,
+      category: 'PREMIUM',
+      materials: false,
+      rating: 5.0,
+      slides: 10,
+      description: 'Top-tier executive template',
+      previewSlides: [
+        '/images/dodge-challenger-srt-hellcat-redye-widebody-2022-5k-8k-7680x5157-8418.jpg',
+        '/images/ford-mustang-gtd-7680x4320-12738.jpg',
+        '/images/ringbrothers-aston-5120x2880-23764.jpg',
+        '/images/hennessey-dodge-7680x4320-14763.jpg'
+      ]
+    },
+    {
+      id: 14,
+      name: 'Luxury Business',
+      price: 25000,
+      category: 'PREMIUM',
+      materials: false,
+      rating: 5.0,
+      slides: 10,
+      description: 'Luxury business presentation',
+      previewSlides: [
+        '/images/ferrari-812-7680x5239-12846.jpg',
+        '/images/hennessey-venom-f5-8256x5504-10169.jpg',
+        '/images/pagani-zonda-f-7680x4320-20306.jpg',
+        '/images/dodge-charger-5120x2880-23634.jpg'
+      ]
+    },
+    {
+      id: 15,
+      name: 'Elite Corporate',
+      price: 25000,
+      category: 'PREMIUM',
+      materials: false,
+      rating: 4.9,
+      slides: 10,
+      description: 'Elite corporate design',
+      previewSlides: [
+        '/images/dodge-viper-srt-gts-5120x2880-23048.jpg',
+        '/images/ferrari-f80-7680x4320-23811.jpg',
+        '/images/MERCEDES.jpg',
+        '/images/hennessey-venom-f5-4953x3302-12646.jpeg'
+      ]
+    },
+    {
+      id: 16,
+      name: 'Premium Pitch Deck',
+      price: 25000,
+      category: 'PREMIUM',
+      materials: false,
+      rating: 5.0,
+      slides: 10,
+      description: 'Premium pitch presentation',
+      previewSlides: [
+        '/images/ferrari-812-7928x4983-13024.jpg',
+        '/images/hennessey-dodge-7680x4320-14763.jpg',
+        '/images/Classic GT40.jpg',
+        '/images/dodge-challenger-srt-hellcat-redye-widebody-2022-5k-8k-7680x5157-8418.jpg'
+      ]
+    },
   ];
 
   const filteredTemplates = templates.filter(t => {
@@ -80,6 +323,7 @@ export default function AscendiaEcommerce() {
 
     const message = `🛒 *ASCENDIA ORDER*\n\n${orderDetails}\n\n*TOTAL: Rp ${cartTotal.toLocaleString()}*\n\nSaya ingin melakukan pemesanan.`;
 
+    // GANTI DENGAN NOMOR WA AKTIF KAMU (format: 628...)
     const whatsappUrl = `https://wa.me/6281234567890?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
@@ -273,10 +517,7 @@ export default function AscendiaEcommerce() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4 text-white">Pricelist</h2>
-              <div className="text-center mb-16">
-                <h2 className="text-4xl font-bold mb-4 text-white">Pricelist</h2>
-                <p className="text-gray-400 text-lg">Simple, clear pricing for your first pro template</p>
-              </div>
+            <p className="text-gray-400 text-lg">Simple, clear pricing for your first pro template</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -433,13 +674,21 @@ export default function AscendiaEcommerce() {
                     </div>
                   </div>
 
-                  <button
-                    onClick={() => addToCart(template)}
-                    className="w-full bg-white text-black px-4 py-2 rounded-lg font-semibold hover:bg-gray-200 transition flex items-center justify-center text-sm"
-                  >
-                    <ShoppingCart className="w-4 h-4 mr-2" />
-                    Add to Cart
-                  </button>
+                  <div className="flex gap-2 mt-3">
+                    <button
+                      onClick={() => setPreviewTemplate(template)}
+                      className="flex-1 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-700 transition"
+                    >
+                      Preview
+                    </button>
+                    <button
+                      onClick={() => addToCart(template)}
+                      className="flex-1 bg-white text-black px-3 py-2 rounded-lg font-semibold hover:bg-gray-200 transition text-sm"
+                    >
+                      <ShoppingCart className="w-3 h-3 inline mr-1" />
+                      Cart
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -527,6 +776,77 @@ export default function AscendiaEcommerce() {
           </div>
         </div>
       </footer>
+
+      {/* Preview Modal */}
+      {previewTemplate && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl p-4"
+          onClick={() => {
+            setPreviewTemplate(null);
+            setCurrentSlideIndex(0);
+          }}
+        >
+          <div 
+            className="relative w-full max-w-4xl bg-gray-900 rounded-xl overflow-hidden border border-gray-700"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="p-4 flex justify-between items-center border-b border-gray-800">
+              <h3 className="font-bold text-white">{previewTemplate.name}</h3>
+              <button 
+                onClick={() => {
+                  setPreviewTemplate(null);
+                  setCurrentSlideIndex(0);
+                }}
+                className="p-2 hover:bg-gray-800 rounded-lg"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-6">
+              {previewTemplate.previewSlides.length > 0 ? (
+                <>
+                  <div className="aspect-[4/3] bg-gray-800 rounded-lg overflow-hidden mb-4 flex items-center justify-center">
+                    <img
+                      src={previewTemplate.previewSlides[currentSlideIndex]}
+                      alt={`Slide ${currentSlideIndex + 1}`}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div className="text-center text-gray-400 text-sm mb-4">
+                    Slide {currentSlideIndex + 1} of {Math.min(previewTemplate.previewSlides.length, 7)}
+                  </div>
+                  <div className="flex justify-center gap-2">
+                    {previewTemplate.previewSlides.slice(0, 7).map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setCurrentSlideIndex(idx)}
+                        className={`w-3 h-3 rounded-full ${currentSlideIndex === idx ? 'bg-white' : 'bg-gray-600'}`}
+                      />
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <p className="text-gray-500 text-center py-8">No preview available</p>
+              )}
+            </div>
+
+            <div className="p-4 border-t border-gray-800 flex justify-end">
+              <button
+                onClick={() => {
+                  addToCart(previewTemplate);
+                  setPreviewTemplate(null);
+                  setCurrentSlideIndex(0);
+                }}
+                className="bg-white text-black px-4 py-2 rounded-lg font-semibold hover:bg-gray-200 transition flex items-center"
+              >
+                <ShoppingCart className="w-4 h-4 mr-2" />
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
