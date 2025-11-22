@@ -273,7 +273,12 @@ export default function AscendiaEcommerce() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4 text-white">Pricelist</h2>
-            <p className="text-gray-400 text-lg">Transparent pricing for every budget</p>
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <div className="text-lg font-bold text-white">Rp {template.price.toLocaleString()}</div>
+                  {/* Baris "sold" dihapus */}
+                </div>
+            </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
