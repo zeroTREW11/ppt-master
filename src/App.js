@@ -432,7 +432,6 @@ export default function AscendiaEcommerce() {
                   <div className="flex items-center justify-between mb-3">
                     <div>
                       <div className="text-lg font-bold text-white">Rp {template.price.toLocaleString()}</div>
-                      <div className="text-xs text-gray-500">{template.sales} sold</div>
                     </div>
                   </div>
 
