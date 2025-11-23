@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   ShoppingCart, Menu, X, Star, Check, Phone, Mail,  
   ArrowRight, Plus, Minus, Trash2, ExternalLink, DollarSign,
-  FileText, Shield, Download, Clock
+  FileText, Shield, Download, Clock, Eye, Calendar, User,
+  MessageCircle, Heart, Send, Instagram, Smartphone
 } from 'lucide-react';
 
 export default function AscendiaEcommerce() {
@@ -16,6 +17,10 @@ export default function AscendiaEcommerce() {
   const [orders, setOrders] = useState([]);
   const [showQRISModal, setShowQRISModal] = useState(false);
   const [showOrderHistory, setShowOrderHistory] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [productComments, setProductComments] = useState({});
+  const [newComment, setNewComment] = useState('');
+  const [productLikes, setProductLikes] = useState({});
 
   const categories = ['ALL', 'STANDARD', 'PREMIUM'];
   const materialFilters = ['ALL', 'WITH MATERIALS', 'WITHOUT MATERIALS'];
@@ -32,16 +37,9 @@ export default function AscendiaEcommerce() {
       description: 'Template profesional untuk presentasi bisnis korporat dengan layout bersih dan modern.',
       previewSlides: Array(4).fill(null).map((_, i) => `/images/slide-${i+1}.jpg`),
       includedSlides: [
-        "Cover Slide",
-        "Company Profile", 
-        "Market Analysis",
-        "Financial Report",
-        "Team Structure",
-        "Project Timeline",
-        "Achievements",
-        "SWOT Analysis", 
-        "Conclusion",
-        "Thank You"
+        "Cover Slide", "Company Profile", "Market Analysis", "Financial Report",
+        "Team Structure", "Project Timeline", "Achievements", "SWOT Analysis", 
+        "Conclusion", "Thank You"
       ]
     },
     {
@@ -55,16 +53,8 @@ export default function AscendiaEcommerce() {
       description: 'Sempurna untuk pitch startup ke investor dengan storytelling yang menarik.',
       previewSlides: Array(4).fill(null).map((_, i) => `/images/slide-${i+1}.jpg`),
       includedSlides: [
-        "Problem Statement",
-        "Solution Overview", 
-        "Market Size",
-        "Business Model",
-        "Product Demo",
-        "Traction",
-        "Team",
-        "Competitive Analysis",
-        "Funding Needs",
-        "Contact"
+        "Problem Statement", "Solution Overview", "Market Size", "Business Model",
+        "Product Demo", "Traction", "Team", "Competitive Analysis", "Funding Needs", "Contact"
       ]
     },
     {
@@ -78,16 +68,8 @@ export default function AscendiaEcommerce() {
       description: 'Template edukasi dengan desain engaging untuk materi pembelajaran.',
       previewSlides: Array(4).fill(null).map((_, i) => `/images/slide-${i+1}.jpg`),
       includedSlides: [
-        "Learning Objectives",
-        "Course Outline", 
-        "Main Content 1",
-        "Main Content 2",
-        "Examples",
-        "Case Studies",
-        "Exercises",
-        "Summary",
-        "Q&A",
-        "References"
+        "Learning Objectives", "Course Outline", "Main Content 1", "Main Content 2",
+        "Examples", "Case Studies", "Exercises", "Summary", "Q&A", "References"
       ]
     },
     {
@@ -101,16 +83,8 @@ export default function AscendiaEcommerce() {
       description: 'Template marketing dengan call-to-action yang jelas dan persuasif.',
       previewSlides: Array(4).fill(null).map((_, i) => `/images/slide-${i+1}.jpg`),
       includedSlides: [
-        "Campaign Overview",
-        "Target Audience", 
-        "Marketing Channels",
-        "Performance Metrics",
-        "Creative Assets",
-        "Budget Allocation",
-        "Timeline",
-        "KPI Dashboard",
-        "Success Stories",
-        "Next Steps"
+        "Campaign Overview", "Target Audience", "Marketing Channels", "Performance Metrics",
+        "Creative Assets", "Budget Allocation", "Timeline", "KPI Dashboard", "Success Stories", "Next Steps"
       ]
     },
     {
@@ -124,16 +98,8 @@ export default function AscendiaEcommerce() {
       description: 'Template premium untuk eksekutif dengan animasi advanced dan layout mewah.',
       previewSlides: Array(4).fill(null).map((_, i) => `/images/slide-${i+1}.jpg`),
       includedSlides: [
-        "Luxury Cover",
-        "Executive Summary", 
-        "Strategic Vision",
-        "Financial Dashboard",
-        "Market Position",
-        "Innovation Roadmap",
-        "Partnerships",
-        "Risk Management",
-        "Future Outlook",
-        "Board Presentation"
+        "Luxury Cover", "Executive Summary", "Strategic Vision", "Financial Dashboard",
+        "Market Position", "Innovation Roadmap", "Partnerships", "Risk Management", "Future Outlook", "Board Presentation"
       ]
     },
     {
@@ -147,16 +113,8 @@ export default function AscendiaEcommerce() {
       description: 'Deck investor elite dengan financial modeling tools yang sophisticated.',
       previewSlides: Array(4).fill(null).map((_, i) => `/images/slide-${i+1}.jpg`),
       includedSlides: [
-        "Investment Thesis",
-        "Market Opportunity", 
-        "Business Model",
-        "Financial Projections",
-        "Traction Metrics",
-        "Competitive Advantage",
-        "Team Expertise",
-        "Use of Funds",
-        "Exit Strategy",
-        "Valuation"
+        "Investment Thesis", "Market Opportunity", "Business Model", "Financial Projections",
+        "Traction Metrics", "Competitive Advantage", "Team Expertise", "Use of Funds", "Exit Strategy", "Valuation"
       ]
     },
     {
@@ -170,16 +128,8 @@ export default function AscendiaEcommerce() {
       description: 'Template luxury brand dengan estetika high-end dan premium typography.',
       previewSlides: Array(4).fill(null).map((_, i) => `/images/slide-${i+1}.jpg`),
       includedSlides: [
-        "Brand Story",
-        "Heritage Timeline", 
-        "Product Portfolio",
-        "Client Testimonials",
-        "Awards & Recognition",
-        "Global Presence",
-        "Sustainability",
-        "Future Collections",
-        "Press Coverage",
-        "Brand Experience"
+        "Brand Story", "Heritage Timeline", "Product Portfolio", "Client Testimonials",
+        "Awards & Recognition", "Global Presence", "Sustainability", "Future Collections", "Press Coverage", "Brand Experience"
       ]
     },
     {
@@ -193,16 +143,8 @@ export default function AscendiaEcommerce() {
       description: 'Template kreatif profesional dengan bold typography dan artistic layouts.',
       previewSlides: Array(4).fill(null).map((_, i) => `/images/slide-${i+1}.jpg`),
       includedSlides: [
-        "Creative Cover",
-        "Portfolio Showcase", 
-        "Process Breakdown",
-        "Case Study 1",
-        "Case Study 2",
-        "Client List",
-        "Services Overview",
-        "Testimonials",
-        "Awards & Features",
-        "Contact Creative"
+        "Creative Cover", "Portfolio Showcase", "Process Breakdown", "Case Study 1",
+        "Case Study 2", "Client List", "Services Overview", "Testimonials", "Awards & Features", "Contact Creative"
       ]
     }
   ];
@@ -214,6 +156,106 @@ export default function AscendiaEcommerce() {
       (selectedMaterial === 'WITHOUT MATERIALS' && !t.materials);
     return categoryMatch && materialMatch;
   });
+
+  // Fungsi untuk komentar produk
+  const addComment = (templateId) => {
+    if (!newComment.trim()) return;
+    
+    const comment = {
+      id: Date.now(),
+      text: newComment,
+      date: new Date().toLocaleString('id-ID'),
+      user: 'Customer'
+    };
+    
+    setProductComments(prev => ({
+      ...prev,
+      [templateId]: [...(prev[templateId] || []), comment]
+    }));
+    
+    setNewComment('');
+  };
+
+  // Fungsi untuk like produk
+  const toggleLike = (templateId) => {
+    setProductLikes(prev => ({
+      ...prev,
+      [templateId]: !prev[templateId]
+    }));
+  };
+
+  // Load data dari localStorage
+  useEffect(() => {
+    const savedCart = localStorage.getItem('ascendia_cart');
+    const savedOrders = localStorage.getItem('ascendia_orders');
+    const savedComments = localStorage.getItem('ascendia_comments');
+    const savedLikes = localStorage.getItem('ascendia_likes');
+    
+    if (savedCart) {
+      try {
+        setCart(JSON.parse(savedCart));
+      } catch (e) {
+        console.error('Error parsing cart:', e);
+      }
+    }
+    
+    if (savedOrders) {
+      try {
+        setOrders(JSON.parse(savedOrders));
+      } catch (e) {
+        console.error('Error parsing orders:', e);
+      }
+    }
+    
+    if (savedComments) {
+      try {
+        setProductComments(JSON.parse(savedComments));
+      } catch (e) {
+        console.error('Error parsing comments:', e);
+      }
+    }
+    
+    if (savedLikes) {
+      try {
+        setProductLikes(JSON.parse(savedLikes));
+      } catch (e) {
+        console.error('Error parsing likes:', e);
+      }
+    }
+  }, []);
+
+  // Save data ke localStorage
+  useEffect(() => {
+    localStorage.setItem('ascendia_cart', JSON.stringify(cart));
+    localStorage.setItem('ascendia_orders', JSON.stringify(orders));
+    localStorage.setItem('ascendia_comments', JSON.stringify(productComments));
+    localStorage.setItem('ascendia_likes', JSON.stringify(productLikes));
+  }, [cart, orders, productComments, productLikes]);
+
+  // Fungsi untuk update status pesanan otomatis
+  const updateOrderStatus = (orderId, newStatus) => {
+    setOrders(prev => prev.map(order => 
+      order.id === orderId ? { ...order, status: newStatus } : order
+    ));
+  };
+
+  // Simulasi admin mengupdate status
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      setOrders(prev => prev.map(order => {
+        const orderTime = new Date(order.date);
+        const diffMinutes = (now - orderTime) / (1000 * 60);
+        
+        if (order.status === 'pending' && diffMinutes > 1) {
+          return { ...order, status: 'completed' };
+        }
+        return order;
+      }));
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const addToCart = (template) => {
     const existing = cart.find(item => item.id === template.id);
@@ -247,32 +289,6 @@ export default function AscendiaEcommerce() {
   const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-  useEffect(() => {
-    const savedCart = localStorage.getItem('ascendia_cart');
-    const savedOrders = localStorage.getItem('ascendia_orders');
-    
-    if (savedCart) {
-      try {
-        setCart(JSON.parse(savedCart));
-      } catch (e) {
-        console.error('Error parsing cart:', e);
-      }
-    }
-    
-    if (savedOrders) {
-      try {
-        setOrders(JSON.parse(savedOrders));
-      } catch (e) {
-        console.error('Error parsing orders:', e);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('ascendia_cart', JSON.stringify(cart));
-    localStorage.setItem('ascendia_orders', JSON.stringify(orders));
-  }, [cart, orders]);
-
   const handleCheckout = () => {
     if (cart.length === 0) {
       alert('🛒 Keranjang belanja Anda kosong!');
@@ -292,7 +308,8 @@ export default function AscendiaEcommerce() {
         slides: item.slides
       })),
       total: cartTotal,
-      status: 'pending'
+      status: 'pending',
+      paymentMethod: 'whatsapp'
     };
     
     setOrders(prev => [newOrder, ...prev]);
@@ -328,125 +345,313 @@ export default function AscendiaEcommerce() {
         slides: item.slides
       })),
       total: cartTotal,
-      status: 'pending'
+      status: 'pending',
+      paymentMethod: 'qris'
     };
     
     setOrders(prev => [newOrder, ...prev]);
     setShowQRISModal(true);
   };
 
+  // QRIS Modal Design Baru yang Lebih Bagus
   const QRISModal = () => (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl p-4">
-      <div className="relative w-full max-w-md bg-white rounded-2xl overflow-hidden shadow-2xl">
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">
-          <div className="flex justify-between items-start mb-4">
-            <div>
-              <h3 className="text-2xl font-bold">Selesaikan Pembayaran</h3>
-              <p className="text-blue-100">Sebelum Waktu Habis</p>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm p-4">
+      <div className="relative w-full max-w-md bg-white rounded-3xl overflow-hidden shadow-2xl mx-auto">
+        {/* Header */}
+        <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-500 p-6 text-white relative overflow-hidden">
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0" style={{
+              backgroundImage: `radial-gradient(circle at 25% 25%, white 2px, transparent 0),
+                              radial-gradient(circle at 75% 75%, white 2px, transparent 0)`,
+              backgroundSize: '30px 30px'
+            }}></div>
+          </div>
+          
+          <div className="flex justify-between items-start mb-4 relative z-10">
+            <div className="flex-1">
+              <h3 className="text-2xl font-bold mb-1">Bayar dengan QRIS</h3>
+              <p className="text-blue-100 opacity-90">Cepat • Aman • Praktis</p>
             </div>
             <button 
               onClick={() => setShowQRISModal(false)}
-              className="text-white hover:text-gray-200 transition-colors"
+              className="text-white hover:text-gray-200 transition-colors flex-shrink-0 ml-4 bg-white/20 p-2 rounded-full"
             >
-              <X className="w-6 h-6" />
+              <X className="w-5 h-5" />
             </button>
           </div>
           
-          <div className="flex justify-between items-center text-sm">
-            <div>
-              <div className="text-blue-100">Tanggal Pembayaran</div>
-              <div className="font-semibold">{new Date().toLocaleDateString('id-ID')}</div>
+          <div className="flex items-center justify-between text-sm relative z-10">
+            <div className="bg-white/20 px-3 py-1 rounded-full">
+              <span className="font-semibold">{new Date().toLocaleDateString('id-ID')}</span>
             </div>
-            <div className="text-right">
-              <div className="text-blue-100">Kode Transaksi</div>
-              <div className="font-semibold">WDP-{Date.now().toString().slice(-8)}</div>
+            <div className="bg-white/20 px-3 py-1 rounded-full">
+              <span className="font-semibold">#{Date.now().toString().slice(-6)}</span>
             </div>
           </div>
         </div>
 
+        {/* Content */}
         <div className="p-6">
+          {/* Order Summary */}
           <div className="mb-6">
-            <h4 className="font-bold text-gray-800 mb-3">Detail Pesanan:</h4>
-            {cart.map(item => (
-              <div key={item.id} className="flex justify-between items-center py-2 border-b border-gray-100">
-                <div>
-                  <p className="font-semibold text-gray-800">{item.name}</p>
-                  <p className="text-sm text-gray-500">
-                    {item.quantity}x • {item.slides} Slide • {item.materials ? 'With Materials' : 'No Materials'}
+            <h4 className="font-bold text-gray-800 mb-3 text-lg flex items-center">
+              <ShoppingCart className="w-5 h-5 mr-2 text-blue-600" />
+              Ringkasan Pesanan
+            </h4>
+            <div className="space-y-3 max-h-32 overflow-y-auto">
+              {cart.map(item => (
+                <div key={item.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-gray-800 text-sm truncate">{item.name}</p>
+                    <p className="text-xs text-gray-500">
+                      {item.quantity}x • {item.slides} slide
+                    </p>
+                  </div>
+                  <p className="font-bold text-gray-800 text-sm ml-3 flex-shrink-0">
+                    Rp {(item.price * item.quantity).toLocaleString()}
                   </p>
                 </div>
-                <p className="font-semibold text-gray-800">
-                  Rp {(item.price * item.quantity).toLocaleString()}
-                </p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
-          <div className="flex justify-between items-center py-3 border-t border-gray-200">
-            <span className="font-bold text-lg text-gray-800">Total Pembayaran</span>
+          {/* Total */}
+          <div className="flex justify-between items-center py-4 border-y border-gray-200 mb-6">
+            <div>
+              <span className="font-bold text-gray-800 text-lg">Total</span>
+              <p className="text-xs text-gray-500">Termasuk semua biaya</p>
+            </div>
             <span className="font-bold text-2xl text-green-600">Rp {cartTotal.toLocaleString()}</span>
           </div>
 
-          <div className="bg-gray-50 rounded-xl p-6 text-center mb-4 border-2 border-dashed border-gray-300">
-            <div className="text-gray-500 mb-2">
-              <DollarSign className="w-12 h-12 mx-auto mb-2" />
-              <p className="font-semibold">Metode Pembayaran QRIS</p>
+          {/* QRIS Section - Design Improved */}
+          <div className="text-center mb-6">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full mb-3">
+              <DollarSign className="w-6 h-6 text-blue-600" />
             </div>
-            <div className="bg-white p-4 rounded-lg inline-block">
-              <div className="w-48 h-48 bg-gradient-to-br from-blue-100 to-purple-100 rounded flex items-center justify-center">
-                <div className="text-center">
-                  <div className="text-xs text-gray-500 mb-2">QR Code akan muncul</div>
-                  <div className="text-xs text-gray-400">di aplikasi e-wallet</div>
+            <h5 className="font-bold text-gray-800 text-lg mb-2">Scan QR Code</h5>
+            <p className="text-gray-600 text-sm mb-4">Buka aplikasi e-wallet dan scan kode berikut</p>
+            
+            {/* QR Container dengan design lebih modern */}
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-2xl border-2 border-dashed border-blue-200 mb-4">
+              <div className="bg-white p-4 rounded-xl shadow-inner mx-auto max-w-xs">
+                <div className="aspect-square bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center relative overflow-hidden">
+                  {/* QR Pattern Simulation */}
+                  <div className="absolute inset-0 opacity-20">
+                    <div className="grid grid-cols-8 gap-1 w-full h-full">
+                      {Array.from({ length: 64 }).map((_, i) => (
+                        <div 
+                          key={i} 
+                          className={`rounded-sm ${Math.random() > 0.5 ? 'bg-blue-600' : 'bg-transparent'}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="text-center relative z-10 p-4">
+                    <Smartphone className="w-12 h-12 text-blue-600 mx-auto mb-2" />
+                    <div className="text-blue-600 font-semibold text-sm">ASCENDIA STORE</div>
+                    <div className="text-blue-800 font-bold text-lg mt-1">Rp {cartTotal.toLocaleString()}</div>
+                    <div className="text-blue-400 text-xs mt-2">QRIS • Payment Gateway</div>
+                  </div>
                 </div>
               </div>
             </div>
-            <p className="text-sm text-gray-600 mt-3">
-              Scan QRIS di atas menggunakan aplikasi e-wallet favorit Anda
-            </p>
+
+            {/* Device Instructions */}
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
+              <div className="flex items-center justify-center text-yellow-800 text-sm">
+                <Smartphone className="w-4 h-4 mr-2" />
+                <span>Gunakan smartphone untuk scan QR code</span>
+              </div>
+            </div>
           </div>
 
-          <div className="bg-blue-50 rounded-lg p-4 mb-4">
-            <h5 className="font-semibold text-blue-800 mb-2 flex items-center">
-              <Shield className="w-4 h-4 mr-2" />
-              Cara Pembayaran:
-            </h5>
-            <ol className="text-sm text-blue-700 space-y-1">
-              <li>1. Buka aplikasi e-wallet (GoPay, OVO, Dana, dll)</li>
-              <li>2. Pilih fitur Bayar/Scan QRIS</li>
-              <li>3. Arahkan kamera ke QR code di atas</li>
-              <li>4. Konfirmasi pembayaran</li>
-              <li>5. Simpan bukti pembayaran</li>
-            </ol>
+          {/* Payment Steps */}
+          <div className="bg-gray-50 rounded-xl p-4 mb-6">
+            <h6 className="font-semibold text-gray-800 mb-3 text-sm">Cara Bayar:</h6>
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              <div className="text-center">
+                <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-1 text-sm font-bold">1</div>
+                <div className="text-gray-600">Buka E-wallet</div>
+              </div>
+              <div className="text-center">
+                <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-1 text-sm font-bold">2</div>
+                <div className="text-gray-600">Scan QR</div>
+              </div>
+              <div className="text-center">
+                <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-1 text-sm font-bold">3</div>
+                <div className="text-gray-600">Bayar</div>
+              </div>
+            </div>
           </div>
 
+          {/* Action Buttons */}
           <div className="space-y-3">
             <button
               onClick={() => {
-                const message = `💳 *KONFIRMASI PEMBAYARAN QRIS*\n\nSaya sudah melakukan pembayaran QRIS untuk order:\n${cart.map(item => `- ${item.name} x${item.quantity}`).join('\n')}\n\nTotal: Rp ${cartTotal.toLocaleString()}\n\nMohon konfirmasi dan kirim template ke email saya.`;
+                const message = `💳 *KONFIRMASI PEMBAYARAN QRIS - ASCENDIA*\n\nSaya sudah melakukan pembayaran QRIS untuk order:\n${cart.map(item => `- ${item.name} x${item.quantity} = Rp ${(item.price * item.quantity).toLocaleString()}`).join('\n')}\n\n*TOTAL: Rp ${cartTotal.toLocaleString()}*\n\nMohon konfirmasi dan kirim template ke email saya. Terima kasih!`;
                 window.open(`https://wa.me/6283837958816?text=${encodeURIComponent(message)}`, '_blank');
+                
+                const latestOrder = orders[0];
+                if (latestOrder) {
+                  updateOrderStatus(latestOrder.id, 'paid');
+                }
+                
                 setShowQRISModal(false);
                 setCart([]);
               }}
-              className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors"
+              className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-4 rounded-xl font-bold hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-lg shadow-green-500/25 flex items-center justify-center text-lg"
             >
+              <Check className="w-5 h-5 mr-2" />
               Sudah Bayar & Konfirmasi
             </button>
             
             <button
               onClick={() => setShowQRISModal(false)}
-              className="w-full border border-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+              className="w-full border-2 border-gray-300 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-50 transition-colors"
             >
-              Tutup
+              Bayar Nanti
             </button>
+          </div>
+
+          {/* Support Info */}
+          <div className="text-center mt-4">
+            <p className="text-xs text-gray-500">
+              Butuh bantuan? WhatsApp: <span className="text-green-600 font-semibold">+62 838-3795-8816</span>
+            </p>
           </div>
         </div>
       </div>
     </div>
   );
 
+  // Komponen Detail Order
+  const OrderDetailModal = () => {
+    if (!selectedOrder) return null;
+
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl p-4">
+        <div className="relative w-full max-w-2xl bg-gray-900 rounded-xl border border-gray-800 max-h-[90vh] overflow-y-auto">
+          <div className="p-6 border-b border-gray-800 sticky top-0 bg-gray-900">
+            <div className="flex justify-between items-center">
+              <h3 className="text-xl font-bold text-white">📋 Detail Pesanan</h3>
+              <button 
+                onClick={() => setSelectedOrder(null)}
+                className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+          
+          <div className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div className="bg-gray-800 p-4 rounded-lg">
+                <div className="flex items-center mb-2">
+                  <Calendar className="w-4 h-4 mr-2 text-blue-400" />
+                  <span className="text-gray-400 text-sm">Tanggal Order</span>
+                </div>
+                <p className="text-white font-semibold">{selectedOrder.date}</p>
+              </div>
+              
+              <div className="bg-gray-800 p-4 rounded-lg">
+                <div className="flex items-center mb-2">
+                  <User className="w-4 h-4 mr-2 text-green-400" />
+                  <span className="text-gray-400 text-sm">Status</span>
+                </div>
+                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                  selectedOrder.status === 'completed' 
+                    ? 'bg-green-500/20 text-green-400' 
+                    : selectedOrder.status === 'paid'
+                    ? 'bg-blue-500/20 text-blue-400'
+                    : 'bg-yellow-500/20 text-yellow-400'
+                }`}>
+                  {selectedOrder.status === 'completed' ? 'Selesai' : 
+                   selectedOrder.status === 'paid' ? 'Sudah Bayar' : 'Menunggu Pembayaran'}
+                </span>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <h4 className="font-bold text-white mb-4 text-lg">Item Pesanan</h4>
+              <div className="space-y-3">
+                {selectedOrder.items.map((item, index) => (
+                  <div key={index} className="bg-gray-800 p-4 rounded-lg border border-gray-700">
+                    <div className="flex justify-between items-start mb-2">
+                      <h5 className="font-semibold text-white">{item.name}</h5>
+                      <span className="text-white font-bold">Rp {(item.price * item.quantity).toLocaleString()}</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-sm text-gray-400">
+                      <div>Kategori: {item.category}</div>
+                      <div>Quantity: {item.quantity}x</div>
+                      <div>Slide: {item.slides}</div>
+                      <div>Materials: {item.materials ? 'Ya' : 'Tidak'}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-gray-800 p-4 rounded-lg mb-6">
+              <h4 className="font-bold text-white mb-3">Informasi Pembayaran</h4>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="text-gray-400">Total:</span>
+                  <p className="text-white font-bold text-lg">Rp {selectedOrder.total.toLocaleString()}</p>
+                </div>
+                <div>
+                  <span className="text-gray-400">Metode:</span>
+                  <p className="text-white font-semibold">
+                    {selectedOrder.paymentMethod === 'qris' ? 'QRIS' : 'WhatsApp'}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              {selectedOrder.status === 'pending' && (
+                <button
+                  onClick={() => {
+                    const message = `💬 *KONFIRMASI ORDER* - #${selectedOrder.id}\n\nSaya ingin konfirmasi status order dan melakukan pembayaran.`;
+                    window.open(`https://wa.me/6283837958816?text=${encodeURIComponent(message)}`, '_blank');
+                  }}
+                  className="flex-1 bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors"
+                >
+                  Konfirmasi via WhatsApp
+                </button>
+              )}
+              
+              {selectedOrder.status === 'completed' && (
+                <button
+                  onClick={() => {
+                    const message = `📦 *REQUEST TEMPLATE* - #${selectedOrder.id}\n\nHalo, saya sudah melakukan pembayaran dan order saya status completed. Mohon template dikirim ke email saya.`;
+                    window.open(`https://wa.me/6283837958816?text=${encodeURIComponent(message)}`, '_blank');
+                  }}
+                  className="flex-1 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                >
+                  Minta Template
+                </button>
+              )}
+
+              <button
+                onClick={() => setSelectedOrder(null)}
+                className="flex-1 border border-gray-600 text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Komponen Order History
   const OrderHistory = () => (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl p-4">
-      <div className="relative w-full max-w-2xl bg-gray-900 rounded-xl border border-gray-800 max-h-[80vh] overflow-y-auto">
+      <div className="relative w-full max-w-4xl bg-gray-900 rounded-xl border border-gray-800 max-h-[80vh] overflow-y-auto">
         <div className="p-6 border-b border-gray-800 sticky top-0 bg-gray-900">
           <div className="flex justify-between items-center">
             <h3 className="text-xl font-bold text-white">📦 Riwayat Pesanan</h3>
@@ -469,24 +674,39 @@ export default function AscendiaEcommerce() {
           ) : (
             <div className="space-y-4">
               {orders.map(order => (
-                <div key={order.id} className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                <div 
+                  key={order.id} 
+                  className="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-gray-600 transition-colors cursor-pointer"
+                  onClick={() => setSelectedOrder(order)}
+                >
                   <div className="flex justify-between items-start mb-3">
-                    <div>
-                      <h4 className="font-bold text-white">Order #{order.id.toString().slice(-6)}</h4>
-                      <p className="text-gray-400 text-sm">{order.date}</p>
+                    <div className="flex items-center space-x-3">
+                      <div>
+                        <h4 className="font-bold text-white">Order #{order.id.toString().slice(-6)}</h4>
+                        <p className="text-gray-400 text-sm">{order.date}</p>
+                      </div>
+                      <button 
+                        className="text-blue-400 hover:text-blue-300 transition-colors"
+                        title="Lihat Detail"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
                     </div>
                     <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                       order.status === 'completed' 
                         ? 'bg-green-500/20 text-green-400' 
+                        : order.status === 'paid'
+                        ? 'bg-blue-500/20 text-blue-400'
                         : 'bg-yellow-500/20 text-yellow-400'
                     }`}>
-                      {order.status === 'completed' ? 'Selesai' : 'Menunggu'}
+                      {order.status === 'completed' ? 'Selesai' : 
+                       order.status === 'paid' ? 'Sudah Bayar' : 'Menunggu'}
                     </span>
                   </div>
                   
                   <div className="space-y-2 mb-3">
-                    {order.items.map(item => (
-                      <div key={item.id} className="flex justify-between text-sm">
+                    {order.items.slice(0, 2).map((item, index) => (
+                      <div key={index} className="flex justify-between text-sm">
                         <span className="text-gray-300">
                           {item.name} x{item.quantity}
                         </span>
@@ -495,6 +715,11 @@ export default function AscendiaEcommerce() {
                         </span>
                       </div>
                     ))}
+                    {order.items.length > 2 && (
+                      <div className="text-gray-400 text-sm">
+                        +{order.items.length - 2} item lainnya...
+                      </div>
+                    )}
                   </div>
                   
                   <div className="flex justify-between items-center pt-3 border-t border-gray-700">
@@ -509,6 +734,83 @@ export default function AscendiaEcommerce() {
       </div>
     </div>
   );
+
+  // Komponen Social Media Links
+  const SocialMediaLinks = () => (
+    <div className="flex space-x-4 mt-4">
+      <a 
+        href="https://www.instagram.com/asc3ndia_?igsh=MWN6eG4yNWVjcGM4bA==" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="flex items-center space-x-2 text-pink-400 hover:text-pink-300 transition-colors"
+      >
+        <Instagram className="w-5 h-5" />
+        <span>@asc3ndia_</span>
+      </a>
+      
+      <a 
+        href="https://www.tiktok.com/@ascendia95?_r=1&_t=ZS-91TPdUVJFnF" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="flex items-center space-x-2 text-cyan-400 hover:text-cyan-300 transition-colors"
+      >
+        <MessageCircle className="w-5 h-5" />
+        <span>@ascendia95</span>
+      </a>
+    </div>
+  );
+
+  // Komponen Product Comments
+  const ProductCommentsSection = ({ templateId }) => {
+    const comments = productComments[templateId] || [];
+    
+    return (
+      <div className="mt-6 border-t border-gray-700 pt-6">
+        <h4 className="font-bold text-white mb-4 flex items-center">
+          <MessageCircle className="w-5 h-5 mr-2" />
+          Komentar ({comments.length})
+        </h4>
+        
+        {/* Input komentar baru */}
+        <div className="flex space-x-2 mb-4">
+          <input
+            type="text"
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="Tulis komentar..."
+            className="flex-1 px-3 py-2 bg-gray-800 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
+            onKeyPress={(e) => e.key === 'Enter' && addComment(templateId)}
+          />
+          <button
+            onClick={() => addComment(templateId)}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+          >
+            <Send className="w-4 h-4" />
+          </button>
+        </div>
+        
+        {/* Daftar komentar */}
+        <div className="space-y-3 max-h-60 overflow-y-auto">
+          {comments.map(comment => (
+            <div key={comment.id} className="bg-gray-800 p-3 rounded-lg">
+              <div className="flex justify-between items-start mb-1">
+                <span className="font-semibold text-white text-sm">{comment.user}</span>
+                <span className="text-gray-400 text-xs">{comment.date}</span>
+              </div>
+              <p className="text-gray-300 text-sm">{comment.text}</p>
+            </div>
+          ))}
+          
+          {comments.length === 0 && (
+            <div className="text-center text-gray-400 py-4">
+              <MessageCircle className="w-8 h-8 mx-auto mb-2 opacity-50" />
+              <p className="text-sm">Belum ada komentar. Jadilah yang pertama berkomentar!</p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   const TriangleLogo = ({ className = "w-10 h-10" }) => (
     <div className={`relative ${className}`}>
@@ -724,206 +1026,8 @@ export default function AscendiaEcommerce() {
       {/* Order History Modal */}
       {showOrderHistory && <OrderHistory />}
 
-      {/* Preview Modal */}
-      {previewTemplate && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl p-4"
-          onClick={() => {
-            setPreviewTemplate(null);
-            setCurrentSlideIndex(0);
-          }}
-        >
-          <div 
-            className="relative w-full max-w-6xl bg-gray-900 rounded-xl overflow-hidden border border-gray-700 max-h-[95vh] overflow-y-auto"
-            onClick={e => e.stopPropagation()}
-          >
-            <div className="p-4 flex justify-between items-center border-b border-gray-800 bg-gray-800 sticky top-0 z-10">
-              <div>
-                <h3 className="font-bold text-white text-xl">{previewTemplate.name}</h3>
-                <p className="text-gray-400 text-sm">{previewTemplate.description}</p>
-              </div>
-              <button 
-                onClick={() => {
-                  setPreviewTemplate(null);
-                  setCurrentSlideIndex(0);
-                }}
-                className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            
-            <div className="p-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div>
-                  <h4 className="font-bold text-white mb-4 text-lg">Preview Template</h4>
-                  
-                  {previewTemplate.previewSlides.length > 0 ? (
-                    <div className="space-y-4">
-                      <div className="aspect-[4/3] bg-gray-800 rounded-lg overflow-hidden flex items-center justify-center border border-gray-700">
-                        <div className="text-center text-gray-400 p-8">
-                          <FileText className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                          <p>Preview Slide {currentSlideIndex + 1}</p>
-                          <p className="text-sm text-gray-500">Gambar preview akan ditampilkan di sini</p>
-                        </div>
-                      </div>
-                      
-                      <div className="text-center text-gray-400 text-sm">
-                        Slide {currentSlideIndex + 1} of {Math.min(previewTemplate.previewSlides.length, 4)}
-                      </div>
-                      
-                      <div className="flex justify-center gap-2 mb-4">
-                        {previewTemplate.previewSlides.slice(0, 4).map((_, idx) => (
-                          <button
-                            key={idx}
-                            onClick={() => setCurrentSlideIndex(idx)}
-                            className={`w-3 h-3 rounded-full transition ${
-                              currentSlideIndex === idx ? 'bg-white' : 'bg-gray-600 hover:bg-gray-400'
-                            }`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <p className="text-gray-500 text-center py-8">No preview available</p>
-                  )}
-                </div>
-
-                <div>
-                  <h4 className="font-bold text-white mb-4 text-lg">Detail Template</h4>
-                  
-                  <div className="bg-gray-800 p-6 rounded-lg border border-gray-700 mb-6">
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                      <div>
-                        <p className="text-gray-400 text-sm">Kategori</p>
-                        <p className="text-white font-semibold">{previewTemplate.category}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-400 text-sm">Jumlah Slide</p>
-                        <p className="text-white font-semibold">{previewTemplate.slides} Slides</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-400 text-sm">Materials</p>
-                        <p className="text-white font-semibold">
-                          {previewTemplate.materials ? 'Dengan Materials' : 'Tanpa Materials'}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-gray-400 text-sm">Rating</p>
-                        <div className="flex items-center">
-                          <Star className="w-4 h-4 text-yellow-500 fill-current mr-1" />
-                          <span className="text-white font-semibold">{previewTemplate.rating}</span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="mb-4">
-                      <p className="text-gray-400 text-sm mb-2">Slide Included:</p>
-                      <div className="grid grid-cols-2 gap-2">
-                        {previewTemplate.includedSlides.map((slide, index) => (
-                          <div key={index} className="flex items-center text-sm text-gray-300">
-                            <Check className="w-3 h-3 text-green-500 mr-2 flex-shrink-0" />
-                            <span className="text-xs">{slide}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <div className="mb-4">
-                      <p className="text-gray-400 text-sm mb-2">Fitur:</p>
-                      <ul className="text-gray-300 text-sm space-y-1">
-                        <li className="flex items-center">
-                          <Check className="w-4 h-4 text-green-500 mr-2" />
-                          Desain {previewTemplate.category === 'PREMIUM' ? 'Premium' : 'Profesional'}
-                        </li>
-                        <li className="flex items-center">
-                          <Check className="w-4 h-4 text-green-500 mr-2" />
-                          {previewTemplate.slides} Slide Unik
-                        </li>
-                        <li className="flex items-center">
-                          <Check className="w-4 h-4 text-green-500 mr-2" />
-                          Format PowerPoint (.pptx)
-                        </li>
-                        {previewTemplate.materials && (
-                          <li className="flex items-center">
-                            <Check className="w-4 h-4 text-green-500 mr-2" />
-                            Konten Materials Lengkap
-                          </li>
-                        )}
-                        {previewTemplate.category === 'PREMIUM' && (
-                          <li className="flex items-center">
-                            <Check className="w-4 h-4 text-green-500 mr-2" />
-                            Priority Support 24/7
-                          </li>
-                        )}
-                      </ul>
-                    </div>
-                  </div>
-
-                  <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
-                    <h5 className="font-bold text-white mb-3">Testimoni Pelanggan</h5>
-                    <div className="space-y-3">
-                      <div className="bg-gray-700 p-3 rounded">
-                        <div className="flex items-center mb-2">
-                          {[...Array(5)].map((_, i) => (
-                            <Star key={i} className="w-3 h-3 text-yellow-500 fill-current" />
-                          ))}
-                        </div>
-                        <p className="text-gray-300 text-sm">"Template sangat profesional dan mudah diedit. Hasil presentasi jadi lebih menarik!"</p>
-                        <p className="text-gray-400 text-xs mt-2">- Business Owner</p>
-                      </div>
-                      <div className="bg-gray-700 p-3 rounded">
-                        <div className="flex items-center mb-2">
-                          {[...Array(5)].map((_, i) => (
-                            <Star key={i} className="w-3 h-3 text-yellow-500 fill-current" />
-                          ))}
-                        </div>
-                        <p className="text-gray-300 text-sm">"Desainnya modern dan sesuai kebutuhan startup saya. Highly recommended!"</p>
-                        <p className="text-gray-400 text-xs mt-2">- Startup Founder</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-4 border-t border-gray-800 bg-gray-800 sticky bottom-0">
-              <div className="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
-                <div>
-                  <span className="text-2xl font-bold text-white">
-                    Rp {previewTemplate.price.toLocaleString()}
-                  </span>
-                  <p className="text-gray-400 text-sm">
-                    {previewTemplate.category} • {previewTemplate.slides} Slides • 
-                    {previewTemplate.materials ? ' With Materials' : ' Without Materials'}
-                  </p>
-                </div>
-                <div className="flex space-x-3">
-                  <button
-                    onClick={() => {
-                      setPreviewTemplate(null);
-                      setCurrentSlideIndex(0);
-                    }}
-                    className="px-6 py-3 border border-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-                  >
-                    Tutup
-                  </button>
-                  <button
-                    onClick={() => {
-                      addToCart(previewTemplate);
-                      setPreviewTemplate(null);
-                    }}
-                    className="px-6 py-3 bg-white text-black rounded-lg font-semibold hover:bg-gray-200 transition-colors flex items-center"
-                  >
-                    <ShoppingCart className="w-4 h-4 mr-2" />
-                    Tambah ke Keranjang
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Order Detail Modal */}
+      {selectedOrder && <OrderDetailModal />}
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden">
@@ -948,6 +1052,29 @@ export default function AscendiaEcommerce() {
             <p className="text-xl text-gray-400 mb-10 leading-relaxed max-w-2xl mx-auto">
               Template presentasi profesional dengan harga terjangkau. Dapatkan desain berkualitas tinggi untuk kebutuhan bisnis, pendidikan, dan presentasi profesional lainnya.
             </p>
+            
+            {/* Social Media Links di Hero */}
+            <div className="flex justify-center space-x-6 mb-8">
+              <a 
+                href="https://www.instagram.com/asc3ndia_?igsh=MWN6eG4yNWVjcGM4bA==" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 text-pink-400 hover:text-pink-300 transition-colors bg-pink-500/10 px-4 py-2 rounded-lg"
+              >
+                <Instagram className="w-5 h-5" />
+                <span>@asc3ndia_</span>
+              </a>
+              
+              <a 
+                href="https://www.tiktok.com/@ascendia95?_r=1&_t=ZS-91TPdUVJFnF" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 text-cyan-400 hover:text-cyan-300 transition-colors bg-cyan-500/10 px-4 py-2 rounded-lg"
+              >
+                <MessageCircle className="w-5 h-5" />
+                <span>@ascendia95</span>
+              </a>
+            </div>
             
             <div className="flex flex-wrap justify-center gap-4">
               <button 
@@ -1051,7 +1178,7 @@ export default function AscendiaEcommerce() {
         </div>
       </section>
 
-      {/* Templates Section */}
+      {/* Templates Section dengan Komentar */}
       <section id="templates" className="py-20 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
@@ -1128,9 +1255,19 @@ export default function AscendiaEcommerce() {
                     }`}>
                       {template.materials ? 'WITH MATERIALS' : 'NO MATERIALS'}
                     </span>
-                    <div className="flex items-center">
-                      <Star className="w-3 h-3 text-yellow-500 fill-current mr-1" />
-                      <span className="text-xs font-semibold text-white">{template.rating}</span>
+                    <div className="flex items-center space-x-2">
+                      <button 
+                        onClick={() => toggleLike(template.id)}
+                        className={`transition-colors ${
+                          productLikes[template.id] ? 'text-red-500' : 'text-gray-400 hover:text-red-400'
+                        }`}
+                      >
+                        <Heart className={`w-3 h-3 ${productLikes[template.id] ? 'fill-current' : ''}`} />
+                      </button>
+                      <div className="flex items-center">
+                        <Star className="w-3 h-3 text-yellow-500 fill-current mr-1" />
+                        <span className="text-xs font-semibold text-white">{template.rating}</span>
+                      </div>
                     </div>
                   </div>
                   
@@ -1169,6 +1306,9 @@ export default function AscendiaEcommerce() {
                       Cart
                     </button>
                   </div>
+
+                  {/* Komentar Section di Card */}
+                  <ProductCommentsSection templateId={template.id} />
                 </div>
               </div>
             ))}
@@ -1176,7 +1316,7 @@ export default function AscendiaEcommerce() {
         </div>
       </section>
 
-      {/* Footer */}
+      {/* Footer dengan Social Media */}
       <footer id="contact" className="bg-gray-950 border-t border-gray-800 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid md:grid-cols-4 gap-12 mb-12">
@@ -1189,11 +1329,15 @@ export default function AscendiaEcommerce() {
                 Template PowerPoint profesional untuk semua kebutuhan presentasi Anda. 
                 Dapatkan desain berkualitas dengan harga terjangkau.
               </p>
+              
+              {/* Social Media di Footer */}
+              <SocialMediaLinks />
+              
               <a 
                 href="https://linktr.ee/ASCENDIAA" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="inline-flex items-center text-white hover:text-gray-300 transition-colors"
+                className="inline-flex items-center text-white hover:text-gray-300 transition-colors mt-4"
               >
                 <ExternalLink className="w-4 h-4 mr-2" /> 
                 Visit Linktree
