@@ -14,12 +14,13 @@ export default function AscendiaEcommerce() {
   const [previewTemplate, setPreviewTemplate] = useState(null);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [orders, setOrders] = useState([]);
+  const [showQRISModal, setShowQRISModal] = useState(false);
+  const [showOrderHistory, setShowOrderHistory] = useState(false);
 
   const categories = ['ALL', 'STANDARD', 'PREMIUM'];
   const materialFilters = ['ALL', 'WITH MATERIALS', 'WITHOUT MATERIALS'];
 
   const templates = [
-    // STANDARD TEMPLATES (4 produk)
     {
       id: 1,
       name: 'Corporate Business Pro',
@@ -43,7 +44,6 @@ export default function AscendiaEcommerce() {
         "Thank You"
       ]
     },
-    // ... (template lainnya tetap sama)
     {
       id: 2,
       name: 'Startup Pitch Deck',
@@ -113,7 +113,6 @@ export default function AscendiaEcommerce() {
         "Next Steps"
       ]
     },
-    // PREMIUM TEMPLATES (4 produk)
     {
       id: 5,
       name: 'Executive Premium Suite',
@@ -216,7 +215,6 @@ export default function AscendiaEcommerce() {
     return categoryMatch && materialMatch;
   });
 
-  // Cart functions - DIREVISI: Hapus custom description
   const addToCart = (template) => {
     const existing = cart.find(item => item.id === template.id);
     if (existing) {
@@ -249,7 +247,6 @@ export default function AscendiaEcommerce() {
   const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-  // Local Storage untuk cart dan orders
   useEffect(() => {
     const savedCart = localStorage.getItem('ascendia_cart');
     const savedOrders = localStorage.getItem('ascendia_orders');
@@ -276,14 +273,12 @@ export default function AscendiaEcommerce() {
     localStorage.setItem('ascendia_orders', JSON.stringify(orders));
   }, [cart, orders]);
 
-  // Checkout functions - DIREVISI: Simpan data order
   const handleCheckout = () => {
     if (cart.length === 0) {
       alert('🛒 Keranjang belanja Anda kosong!');
       return;
     }
     
-    // Simpan data pesanan
     const newOrder = {
       id: Date.now(),
       date: new Date().toLocaleString('id-ID'),
@@ -310,7 +305,6 @@ export default function AscendiaEcommerce() {
     
     window.open(`https://wa.me/6283837958816?text=${encodeURIComponent(message)}`, '_blank');
     
-    // Clear cart setelah checkout
     setCart([]);
     setCartOpen(false);
   };
@@ -321,7 +315,6 @@ export default function AscendiaEcommerce() {
       return;
     }
     
-    // Simpan data pesanan
     const newOrder = {
       id: Date.now(),
       date: new Date().toLocaleString('id-ID'),
@@ -339,18 +332,12 @@ export default function AscendiaEcommerce() {
     };
     
     setOrders(prev => [newOrder, ...prev]);
-    
-    // Tampilkan modal QRIS
     setShowQRISModal(true);
   };
 
-  const [showQRISModal, setShowQRISModal] = useState(false);
-
-  // Komponen QRIS Modal
   const QRISModal = () => (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl p-4">
       <div className="relative w-full max-w-md bg-white rounded-2xl overflow-hidden shadow-2xl">
-        {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">
           <div className="flex justify-between items-start mb-4">
             <div>
@@ -377,9 +364,7 @@ export default function AscendiaEcommerce() {
           </div>
         </div>
 
-        {/* Content */}
         <div className="p-6">
-          {/* Order Details */}
           <div className="mb-6">
             <h4 className="font-bold text-gray-800 mb-3">Detail Pesanan:</h4>
             {cart.map(item => (
@@ -397,13 +382,11 @@ export default function AscendiaEcommerce() {
             ))}
           </div>
 
-          {/* Total */}
           <div className="flex justify-between items-center py-3 border-t border-gray-200">
             <span className="font-bold text-lg text-gray-800">Total Pembayaran</span>
             <span className="font-bold text-2xl text-green-600">Rp {cartTotal.toLocaleString()}</span>
           </div>
 
-          {/* QRIS Placeholder */}
           <div className="bg-gray-50 rounded-xl p-6 text-center mb-4 border-2 border-dashed border-gray-300">
             <div className="text-gray-500 mb-2">
               <DollarSign className="w-12 h-12 mx-auto mb-2" />
@@ -422,7 +405,6 @@ export default function AscendiaEcommerce() {
             </p>
           </div>
 
-          {/* Instructions */}
           <div className="bg-blue-50 rounded-lg p-4 mb-4">
             <h5 className="font-semibold text-blue-800 mb-2 flex items-center">
               <Shield className="w-4 h-4 mr-2" />
@@ -437,7 +419,6 @@ export default function AscendiaEcommerce() {
             </ol>
           </div>
 
-          {/* Action Buttons */}
           <div className="space-y-3">
             <button
               onClick={() => {
@@ -463,7 +444,6 @@ export default function AscendiaEcommerce() {
     </div>
   );
 
-  // Komponen Order History
   const OrderHistory = () => (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl p-4">
       <div className="relative w-full max-w-2xl bg-gray-900 rounded-xl border border-gray-800 max-h-[80vh] overflow-y-auto">
@@ -530,9 +510,6 @@ export default function AscendiaEcommerce() {
     </div>
   );
 
-  const [showOrderHistory, setShowOrderHistory] = useState(false);
-
-  // Komponen lainnya tetap sama...
   const TriangleLogo = ({ className = "w-10 h-10" }) => (
     <div className={`relative ${className}`}>
       <svg viewBox="0 0 100 100" className="w-full h-full">
@@ -574,7 +551,7 @@ export default function AscendiaEcommerce() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Header - Tambahkan Order History Button */}
+      {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-xl border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-20">
@@ -600,7 +577,6 @@ export default function AscendiaEcommerce() {
             </div>
             
             <div className="flex items-center space-x-4">
-              {/* Order History Button */}
               <button 
                 className="p-2 hover:bg-gray-900 rounded-lg transition relative" 
                 onClick={() => setShowOrderHistory(true)}
@@ -614,7 +590,6 @@ export default function AscendiaEcommerce() {
                 )}
               </button>
 
-              {/* Cart Button */}
               <button 
                 className="p-2 hover:bg-gray-900 rounded-lg transition relative" 
                 onClick={() => setCartOpen(!cartOpen)}
@@ -635,7 +610,7 @@ export default function AscendiaEcommerce() {
         </div>
       </header>
 
-      {/* Cart Sidebar - DIREVISI: Hapus input custom description */}
+      {/* Cart Sidebar */}
       {cartOpen && (
         <div className="fixed inset-0 z-50 lg:inset-auto lg:right-0 lg:top-20 lg:bottom-0 lg:w-96">
           <div className="absolute inset-0 bg-black/80 lg:hidden" onClick={() => setCartOpen(false)}></div>
@@ -749,7 +724,7 @@ export default function AscendiaEcommerce() {
       {/* Order History Modal */}
       {showOrderHistory && <OrderHistory />}
 
-      {/* Preview Modal - DIREVISI: Tampilkan daftar slide included */}
+      {/* Preview Modal */}
       {previewTemplate && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl p-4"
@@ -780,7 +755,6 @@ export default function AscendiaEcommerce() {
             
             <div className="p-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Preview Slides Section */}
                 <div>
                   <h4 className="font-bold text-white mb-4 text-lg">Preview Template</h4>
                   
@@ -815,7 +789,6 @@ export default function AscendiaEcommerce() {
                   )}
                 </div>
 
-                {/* Template Details */}
                 <div>
                   <h4 className="font-bold text-white mb-4 text-lg">Detail Template</h4>
                   
@@ -844,7 +817,6 @@ export default function AscendiaEcommerce() {
                       </div>
                     </div>
                     
-                    {/* Daftar Slide Included */}
                     <div className="mb-4">
                       <p className="text-gray-400 text-sm mb-2">Slide Included:</p>
                       <div className="grid grid-cols-2 gap-2">
@@ -888,7 +860,6 @@ export default function AscendiaEcommerce() {
                     </div>
                   </div>
 
-                  {/* Testimonials */}
                   <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
                     <h5 className="font-bold text-white mb-3">Testimoni Pelanggan</h5>
                     <div className="space-y-3">
@@ -954,22 +925,258 @@ export default function AscendiaEcommerce() {
         </div>
       )}
 
-      {/* Hero Section dan lainnya tetap sama... */}
+      {/* Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden">
-        {/* ... (hero section code tetap sama) */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0" style={{
+            backgroundImage: 'linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)',
+            backgroundSize: '50px 50px'
+          }}></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+          <div className="text-center max-w-4xl mx-auto">
+            <div className="inline-block px-4 py-2 bg-gray-900/80 border border-gray-700 rounded-full text-sm mb-6 text-white">
+              ✨ Professional PowerPoint Templates
+            </div>
+            
+            <h1 className="text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+              <span className="text-white">ASCENDIA</span><br />
+              <span className="text-gray-300">Template</span> Solutions
+            </h1>
+            
+            <p className="text-xl text-gray-400 mb-10 leading-relaxed max-w-2xl mx-auto">
+              Template presentasi profesional dengan harga terjangkau. Dapatkan desain berkualitas tinggi untuk kebutuhan bisnis, pendidikan, dan presentasi profesional lainnya.
+            </p>
+            
+            <div className="flex flex-wrap justify-center gap-4">
+              <button 
+                onClick={() => document.getElementById('templates')?.scrollIntoView({ behavior: 'smooth' })}
+                className="group bg-white text-black px-8 py-4 rounded-lg font-semibold hover:bg-gray-200 flex items-center transition-all duration-300"
+              >
+                Jelajahi Template
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Pricing Section */}
       <section id="pricing" className="py-20 bg-gray-950/50">
-        {/* ... (pricing section code tetap sama) */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4 text-white">Pricelist</h2>
+            <p className="text-gray-400 text-lg">Harga sederhana dan jelas untuk template profesional</p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div className="bg-gray-900 border-2 border-gray-800 rounded-3xl p-8 hover:border-blue-500 transition-colors duration-300">
+              <h3 className="text-2xl font-bold mb-6 text-white">Standard (10 Slide)</h3>
+              <div className="space-y-4 mb-8">
+                <div className="flex justify-between items-center py-3 border-b border-gray-800">
+                  <span className="text-gray-300">Dengan Materials</span>
+                  <span className="text-2xl font-bold text-white">Rp 10.000</span>
+                </div>
+                <div className="flex justify-between items-center py-3">
+                  <span className="text-gray-300">Tanpa Materials</span>
+                  <span className="text-2xl font-bold text-white">Rp 15.000</span>
+                </div>
+              </div>
+              <ul className="space-y-3">
+                <li className="flex items-center text-sm text-gray-300">
+                  <Check className="w-5 h-5 mr-2 text-green-500" /> 
+                  Desain Profesional
+                </li>
+                <li className="flex items-center text-sm text-gray-300">
+                  <Check className="w-5 h-5 mr-2 text-green-500" /> 
+                  10 Slide Unik
+                </li>
+                <li className="flex items-center text-sm text-gray-300">
+                  <Check className="w-5 h-5 mr-2 text-green-500" /> 
+                  Konten Dapat Diedit
+                </li>
+                <li className="flex items-center text-sm text-gray-300">
+                  <Check className="w-5 h-5 mr-2 text-green-500" /> 
+                  Format PowerPoint
+                </li>
+              </ul>
+            </div>
+            
+            <div className="bg-gradient-to-br from-gray-800 to-gray-900 border-2 border-white rounded-3xl p-8 relative hover:border-yellow-400 transition-colors duration-300">
+              <div className="absolute top-0 right-0 bg-white text-black px-4 py-1 text-sm font-bold rounded-bl-xl rounded-tr-xl">
+                PREMIUM
+              </div>
+              <h3 className="text-2xl font-bold mb-6 text-white">Premium (10 Slide)</h3>
+              <div className="space-y-4 mb-8">
+                <div className="flex justify-between items-center py-3 border-b border-gray-700">
+                  <span className="text-gray-300">Dengan Materials</span>
+                  <span className="text-2xl font-bold text-white">Rp 20.000</span>
+                </div>
+                <div className="flex justify-between items-center py-3">
+                  <span className="text-gray-300">Tanpa Materials</span>
+                  <span className="text-2xl font-bold text-white">Rp 25.000</span>
+                </div>
+              </div>
+              <ul className="space-y-3">
+                <li className="flex items-center text-sm text-gray-300">
+                  <Check className="w-5 h-5 mr-2 text-green-500" /> 
+                  Desain Premium Eksklusif
+                </li>
+                <li className="flex items-center text-sm text-gray-300">
+                  <Check className="w-5 h-5 mr-2 text-green-500" /> 
+                  10 Slide Advanced
+                </li>
+                <li className="flex items-center text-sm text-gray-300">
+                  <Check className="w-5 h-5 mr-2 text-green-500" /> 
+                  Priority Support
+                </li>
+                <li className="flex items-center text-sm text-gray-300">
+                  <Check className="w-5 h-5 mr-2 text-green-500" /> 
+                  Customization Available
+                </li>
+                <li className="flex items-center text-sm text-gray-300">
+                  <Check className="w-5 h-5 mr-2 text-green-500" /> 
+                  Free Revisions
+                </li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="mt-8 text-center text-gray-400">
+            <p className="text-sm">
+              💡 <strong>Slide tambahan:</strong> <span className="text-white font-bold">Rp 1.000</span> per slide
+            </p>
+          </div>
+        </div>
       </section>
 
       {/* Templates Section */}
       <section id="templates" className="py-20 bg-black">
-        {/* ... (templates section code tetap sama) */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4 text-white">Template Kami</h2>
+            <p className="text-gray-400 text-lg">{templates.length} template profesional siap digunakan</p>
+          </div>
+          
+          <div className="mb-12 space-y-6">
+            <div>
+              <p className="text-sm text-gray-400 mb-3">Kategori:</p>
+              <div className="flex flex-wrap gap-3">
+                {categories.map(cat => (
+                  <button
+                    key={cat}
+                    onClick={() => setSelectedCategory(cat)}
+                    className={`px-6 py-3 rounded-lg font-medium transition ${
+                      selectedCategory === cat 
+                        ? 'bg-white text-black' 
+                        : 'bg-gray-900 text-gray-300 hover:bg-gray-800 border border-gray-800'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            <div>
+              <p className="text-sm text-gray-400 mb-3">Materials:</p>
+              <div className="flex flex-wrap gap-3">
+                {materialFilters.map(filter => (
+                  <button
+                    key={filter}
+                    onClick={() => setSelectedMaterial(filter)}
+                    className={`px-6 py-3 rounded-lg font-medium transition ${
+                      selectedMaterial === filter 
+                        ? 'bg-white text-black' 
+                        : 'bg-gray-900 text-gray-300 hover:bg-gray-800 border border-gray-800'
+                    }`}
+                  >
+                    {filter}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {filteredTemplates.map(template => (
+              <div 
+                key={template.id} 
+                className="group bg-gray-900 rounded-xl overflow-hidden border border-gray-800 hover:border-white transition-all duration-300 hover:transform hover:scale-105"
+              >
+                <div className="relative h-48 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                  <TriangleLogo className="w-20 h-20 opacity-80" />
+                  {template.category === 'PREMIUM' && (
+                    <div className="absolute top-3 right-3 bg-yellow-500 text-black px-3 py-1 text-xs font-bold rounded-full">
+                      PREMIUM
+                    </div>
+                  )}
+                  {template.materials && (
+                    <div className="absolute top-3 left-3 bg-blue-500 text-white px-2 py-1 text-xs rounded">
+                      +Materials
+                    </div>
+                  )}
+                </div>
+                
+                <div className="p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className={`text-xs font-semibold px-2 py-1 rounded ${
+                      template.materials 
+                        ? 'text-blue-300 bg-blue-900/30' 
+                        : 'text-gray-400 bg-gray-800'
+                    }`}>
+                      {template.materials ? 'WITH MATERIALS' : 'NO MATERIALS'}
+                    </span>
+                    <div className="flex items-center">
+                      <Star className="w-3 h-3 text-yellow-500 fill-current mr-1" />
+                      <span className="text-xs font-semibold text-white">{template.rating}</span>
+                    </div>
+                  </div>
+                  
+                  <h3 className="font-bold mb-2 text-white text-sm leading-tight">
+                    {template.name}
+                  </h3>
+                  
+                  <p className="text-xs text-gray-400 mb-3 leading-relaxed">
+                    {template.description}
+                  </p>
+                  
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="text-lg font-bold text-white">
+                      Rp {template.price.toLocaleString()}
+                    </div>
+                    <div className="text-xs text-gray-400">
+                      {template.slides} slides
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        setPreviewTemplate(template);
+                        setCurrentSlideIndex(0);
+                      }}
+                      className="flex-1 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors"
+                    >
+                      Preview
+                    </button>
+                    <button
+                      onClick={() => addToCart(template)}
+                      className="flex-1 bg-white text-black px-3 py-2 rounded-lg font-semibold hover:bg-gray-200 text-sm transition-colors flex items-center justify-center"
+                    >
+                      <ShoppingCart className="w-3 h-3 inline mr-1" />
+                      Cart
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
-      {/* Footer - Update navigation */}
+      {/* Footer */}
       <footer id="contact" className="bg-gray-950 border-t border-gray-800 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid md:grid-cols-4 gap-12 mb-12">
