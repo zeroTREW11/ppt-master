@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  ShoppingCart, User, Menu, X, Star, Check, Phone, Mail,  
+  ShoppingCart, Menu, X, Star, Check, Phone, Mail,  
   ArrowRight, Plus, Minus, Trash2, ExternalLink, DollarSign,
-  CreditCard, Shield, FileText, Settings, Package, BarChart3,
-  LogOut, Edit3
+  FileText, Package, Shield
 } from 'lucide-react';
-import { supabase } from './lib/supabaseClient';
 
 export default function AscendiaEcommerce() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -15,38 +13,13 @@ export default function AscendiaEcommerce() {
   const [cartOpen, setCartOpen] = useState(false);
   const [previewTemplate, setPreviewTemplate] = useState(null);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-  const [user, setUser] = useState(null);
-  const [userRole, setUserRole] = useState('member');
-  const [reviews, setReviews] = useState([]);
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState('');
-  const [loginMode, setLoginMode] = useState('login');
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
-  const [showAuthModal, setShowAuthModal] = useState(false);
   const [customDescriptions, setCustomDescriptions] = useState({});
-  const [currentView, setCurrentView] = useState('customer');
-  const [newTemplate, setNewTemplate] = useState({
-    name: '',
-    price: '',
-    category: 'STANDARD',
-    materials: true,
-    slides: 10,
-    description: '',
-    slideDescriptions: ['', '', '', '']
-  });
-  const [orders, setOrders] = useState([]);
-  const [websiteMaintenance, setWebsiteMaintenance] = useState(false);
-  const [adminStats, setAdminStats] = useState({
-    totalOrders: 0,
-    totalRevenue: 0,
-    totalTemplates: 16
-  });
 
   const categories = ['ALL', 'STANDARD', 'PREMIUM'];
   const materialFilters = ['ALL', 'WITH MATERIALS', 'WITHOUT MATERIALS'];
 
   const templates = [
+    // STANDARD TEMPLATES (4 produk)
     {
       id: 1,
       name: 'Corporate Business Pro',
@@ -55,36 +28,138 @@ export default function AscendiaEcommerce() {
       materials: true,
       rating: 4.8,
       slides: 10,
-      description: 'Professional corporate presentation with clean layout. Perfect for business meetings and corporate reports.',
+      description: 'Template profesional untuk presentasi bisnis korporat dengan layout bersih dan modern. Perfect untuk meeting bisnis dan laporan perusahaan.',
       previewSlides: Array(4).fill(null).map((_, i) => `/images/slide-${i+1}.jpg`),
       slideDescriptions: [
-        "Slide 1: Cover Page - Professional company branding with logo and title",
-        "Slide 2: Agenda - Structured overview of presentation topics",
-        "Slide 3: Market Analysis - Data-driven insights with charts and graphs",
-        "Slide 4: Financial Highlights - Revenue and profit analysis"
+        "Slide 1: Halaman Cover - Logo perusahaan dan judul presentasi yang profesional",
+        "Slide 2: Agenda - Overview terstruktur topik presentasi",
+        "Slide 3: Analisis Pasar - Insight data-driven dengan chart dan grafik terkini",
+        "Slide 4: Highlight Keuangan - Analisis revenue, profit, dan growth metrics"
       ]
     },
     {
       id: 2,
-      name: 'Startup Pitch Essential',
+      name: 'Startup Pitch Deck',
       price: 10000,
       category: 'STANDARD',
       materials: true,
       rating: 4.7,
       slides: 10,
-      description: 'Perfect for startup pitches to investors with compelling storytelling.',
+      description: 'Sempurna untuk pitch startup ke investor dengan storytelling yang menarik dan data yang compelling.',
       previewSlides: Array(4).fill(null).map((_, i) => `/images/slide-${i+1}.jpg`),
       slideDescriptions: [
-        "Slide 1: Problem Statement - Clear identification of market gap",
-        "Slide 2: Solution Overview - Innovative solution presentation",
-        "Slide 3: Market Size - TAM, SAM, SOM analysis with visuals",
-        "Slide 4: Business Model - Revenue streams and monetization strategy"
+        "Slide 1: Problem Statement - Identifikasi jelas masalah pasar yang dipecahkan",
+        "Slide 2: Solution Overview - Presentasi solusi inovatif dan unique value proposition",
+        "Slide 3: Market Size - Analisis TAM, SAM, SOM dengan visual yang engaging",
+        "Slide 4: Business Model - Strategi monetisasi dan revenue streams"
       ]
     },
-    // ... (templates lainnya dengan deskripsi yang lebih detail)
+    {
+      id: 3,
+      name: 'Education Master',
+      price: 15000,
+      category: 'STANDARD',
+      materials: false,
+      rating: 4.9,
+      slides: 10,
+      description: 'Template edukasi dengan desain engaging untuk materi pembelajaran yang interaktif dan mudah dipahami.',
+      previewSlides: Array(4).fill(null).map((_, i) => `/images/slide-${i+1}.jpg`),
+      slideDescriptions: [
+        "Slide 1: Judul Pembelajaran - Layout clean dengan learning objectives",
+        "Slide 2: Tujuan Pembelajaran - Learning outcomes yang terstruktur",
+        "Slide 3: Konten Utama - Materi pembelajaran dengan visual aids",
+        "Slide 4: Evaluasi - Quiz dan assessment interaktif"
+      ]
+    },
+    {
+      id: 4,
+      name: 'Marketing Campaign',
+      price: 15000,
+      category: 'STANDARD',
+      materials: false,
+      rating: 4.6,
+      slides: 10,
+      description: 'Template marketing dengan call-to-action yang jelas dan persuasif untuk campaign yang efektif.',
+      previewSlides: Array(4).fill(null).map((_, i) => `/images/slide-${i+1}.jpg`),
+      slideDescriptions: [
+        "Slide 1: Overview Kampanye - Big idea dan campaign theme",
+        "Slide 2: Target Audience - Customer persona dan segmentation",
+        "Slide 3: Marketing Channels - Multi-channel strategy breakdown",
+        "Slide 4: Performance Metrics - KPI dan measurement framework"
+      ]
+    },
+
+    // PREMIUM TEMPLATES (4 produk)
+    {
+      id: 5,
+      name: 'Executive Premium Suite',
+      price: 20000,
+      category: 'PREMIUM',
+      materials: true,
+      rating: 5.0,
+      slides: 10,
+      description: 'Template premium untuk eksekutif dengan animasi advanced, design system yang konsisten, dan layout mewah.',
+      previewSlides: Array(4).fill(null).map((_, i) => `/images/slide-${i+1}.jpg`),
+      slideDescriptions: [
+        "Slide 1: Cover Mewah - Desain eksklusif dengan luxury aesthetics",
+        "Slide 2: Dashboard Interaktif - Data visualization real-time dengan advanced charts",
+        "Slide 3: Visual 3D - Model dan grafik advanced dengan depth perception",
+        "Slide 4: Ikon Kustom - Custom iconography dan branding elements premium"
+      ]
+    },
+    {
+      id: 6,
+      name: 'Investor Deck Elite',
+      price: 20000,
+      category: 'PREMIUM',
+      materials: true,
+      rating: 5.0,
+      slides: 10,
+      description: 'Deck investor elite dengan financial modeling tools yang sophisticated dan data room integration.',
+      previewSlides: Array(4).fill(null).map((_, i) => `/images/slide-${i+1}.jpg`),
+      slideDescriptions: [
+        "Slide 1: Investment Thesis - Value proposition dan market opportunity",
+        "Slide 2: Financial Projections - Revenue modeling dan unit economics",
+        "Slide 3: Exit Strategy - Multiple exit scenarios dan valuation analysis",
+        "Slide 4: Risk Mitigation - Risk assessment dan contingency planning"
+      ]
+    },
+    {
+      id: 7,
+      name: 'Luxury Brand Package',
+      price: 25000,
+      category: 'PREMIUM',
+      materials: false,
+      rating: 4.9,
+      slides: 10,
+      description: 'Template luxury brand dengan estetika high-end, premium typography, dan visual storytelling yang sophisticated.',
+      previewSlides: Array(4).fill(null).map((_, i) => `/images/slide-${i+1}.jpg`),
+      slideDescriptions: [
+        "Slide 1: Desain Eksklusif - Luxury aesthetics dengan premium textures",
+        "Slide 2: Portfolio Klien VIP - Case studies dan client testimonials",
+        "Slide 3: Brand Heritage - Storytelling dan brand legacy presentation",
+        "Slide 4: Experience Design - Customer journey dan touchpoints mapping"
+      ]
+    },
+    {
+      id: 8,
+      name: 'Creative Pro Max',
+      price: 25000,
+      category: 'PREMIUM',
+      materials: false,
+      rating: 4.9,
+      slides: 10,
+      description: 'Template kreatif profesional dengan bold typography, artistic layouts, dan dynamic animations untuk presentasi yang memorable.',
+      previewSlides: Array(4).fill(null).map((_, i) => `/images/slide-${i+1}.jpg`),
+      slideDescriptions: [
+        "Slide 1: Judul Artistik - Creative typography dengan visual hierarchy",
+        "Slide 2: Layout Kreatif - Modern collage dan asymmetric design",
+        "Slide 3: Background Gradient - Dynamic color transitions dan depth effects",
+        "Slide 4: Transisi Kreatif - Smooth animations dan micro-interactions"
+      ]
+    }
   ];
 
-  // Filter templates
   const filteredTemplates = templates.filter(t => {
     const categoryMatch = selectedCategory === 'ALL' || t.category === selectedCategory;
     const materialMatch = selectedMaterial === 'ALL' ||
@@ -107,7 +182,7 @@ export default function AscendiaEcommerce() {
         customDescription: customDescriptions[template.id] || ''
       }]);
     }
-    alert(`${template.name} ditambahkan ke keranjang!`);
+    alert(`✅ ${template.name} ditambahkan ke keranjang!`);
   };
 
   const removeFromCart = (id) => {
@@ -164,201 +239,10 @@ export default function AscendiaEcommerce() {
     localStorage.setItem('ascendia_custom_desc', JSON.stringify(customDescriptions));
   }, [cart, customDescriptions]);
 
-  // Authentication
-  useEffect(() => {
-    const initAuth = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user) {
-          setUser(session.user);
-          // Check user role - sederhana berdasarkan email
-          const isAdmin = session.user.email === 'admin@ascendia.com' || session.user.email.includes('admin');
-          setUserRole(isAdmin ? 'admin' : 'member');
-          if (isAdmin) {
-            setCurrentView('admin');
-            fetchOrders();
-          }
-        }
-        
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(
-          async (event, session) => {
-            setUser(session?.user || null);
-            if (session?.user) {
-              const isAdmin = session.user.email === 'admin@ascendia.com' || session.user.email.includes('admin');
-              setUserRole(isAdmin ? 'admin' : 'member');
-              if (isAdmin) {
-                setCurrentView('admin');
-                fetchOrders();
-              } else {
-                setCurrentView('customer');
-              }
-            } else {
-              setUserRole('member');
-              setCurrentView('customer');
-            }
-          }
-        );
-        
-        return () => subscription.unsubscribe();
-      } catch (error) {
-        console.error('Auth initialization error:', error);
-      }
-    };
-    initAuth();
-  }, []);
-
-  const handleAuth = async (e) => {
-    e.preventDefault();
-    try {
-      if (loginMode === 'signup') {
-        const { error } = await supabase.auth.signUp({ 
-          email: loginEmail, 
-          password: loginPassword 
-        });
-        if (error) throw error;
-        alert('Akun berhasil dibuat! Silakan login.');
-        setLoginMode('login');
-        setLoginEmail('');
-        setLoginPassword('');
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ 
-          email: loginEmail, 
-          password: loginPassword 
-        });
-        if (error) throw error;
-        setShowAuthModal(false);
-        setLoginEmail('');
-        setLoginPassword('');
-      }
-    } catch (error) {
-      alert('Error: ' + error.message);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await supabase.auth.signOut();
-      setUser(null);
-      setUserRole('member');
-      setCurrentView('customer');
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
-  };
-
-  // Reviews
-  const fetchReviews = async (templateId) => {
-    try {
-      const { data, error } = await supabase
-        .from('reviews')
-        .select('*, profiles(username)')
-        .eq('template_id', templateId)
-        .order('created_at', { ascending: false });
-      
-      if (error) throw error;
-      setReviews(data || []);
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
-      // Fallback ke data dummy jika error
-      setReviews([
-        {
-          id: 1,
-          rating: 5,
-          comment: "Template sangat bagus dan profesional!",
-          profiles: { username: "User123" }
-        },
-        {
-          id: 2,
-          rating: 4,
-          comment: "Desainnya modern dan mudah diedit.",
-          profiles: { username: "BusinessOwner" }
-        }
-      ]);
-    }
-  };
-
-  const submitReview = async () => {
-    if (!user) {
-      alert('Silakan login terlebih dahulu untuk memberikan ulasan!');
-      setShowAuthModal(true);
-      return;
-    }
-    
-    if (!rating) {
-      alert('Silakan beri rating terlebih dahulu!');
-      return;
-    }
-    
-    if (!comment.trim()) {
-      alert('Silakan tulis komentar untuk ulasan!');
-      return;
-    }
-    
-    try {
-      const { error } = await supabase
-        .from('reviews')
-        .insert({ 
-          template_id: previewTemplate.id, 
-          user_id: user.id, 
-          rating, 
-          comment: comment.trim() 
-        });
-      
-      if (error) throw error;
-      
-      alert('Ulasan berhasil dikirim! Terima kasih atas feedbacknya.');
-      setComment('');
-      setRating(0);
-      fetchReviews(previewTemplate.id);
-    } catch (error) {
-      alert('Gagal mengirim ulasan: ' + error.message);
-    }
-  };
-
-  // Orders & Admin Functions
-  const fetchOrders = async () => {
-    try {
-      // Simulasi data orders untuk demo
-      const mockOrders = [
-        {
-          id: 1,
-          user_id: '1',
-          items: [{ name: 'Corporate Business Pro', quantity: 1, price: 10000 }],
-          total: 10000,
-          status: 'completed',
-          created_at: new Date().toISOString()
-        },
-        {
-          id: 2,
-          user_id: '2',
-          items: [{ name: 'Startup Pitch Essential', quantity: 2, price: 10000 }],
-          total: 20000,
-          status: 'pending',
-          created_at: new Date().toISOString()
-        }
-      ];
-      setOrders(mockOrders);
-      
-      // Update stats
-      setAdminStats({
-        totalOrders: mockOrders.length,
-        totalRevenue: mockOrders.reduce((sum, order) => sum + order.total, 0),
-        totalTemplates: templates.length
-      });
-    } catch (error) {
-      console.error('Error fetching orders:', error);
-    }
-  };
-
+  // Checkout functions
   const handleCheckout = () => {
     if (cart.length === 0) {
-      alert('Keranjang belanja Anda kosong!');
-      return;
-    }
-    
-    if (!user) {
-      alert('Silakan login terlebih dahulu untuk melakukan checkout!');
-      setShowAuthModal(true);
+      alert('🛒 Keranjang belanja Anda kosong!');
       return;
     }
     
@@ -366,11 +250,9 @@ export default function AscendiaEcommerce() {
       `- ${item.name} (${item.category}) x${item.quantity} = Rp ${(item.price * item.quantity).toLocaleString()}\n  Deskripsi: ${item.customDescription || 'Tidak ada deskripsi khusus'}`
     ).join('\n');
     
-    const customerInfo = user ? `\n*Customer:* ${user.email}` : '';
+    const message = `🛒 *ORDER ASCENDIA TEMPLATE*\n\n${orderDetails}\n\n*TOTAL: Rp ${cartTotal.toLocaleString()}*\n\nSaya ingin memesan template di atas. Mohon info untuk proses selanjutnya.`;
     
-    const message = `🛒 *ORDER ASCENDIA TEMPLATE*\n\n${orderDetails}\n\n*TOTAL: Rp ${cartTotal.toLocaleString()}*${customerInfo}\n\nSaya ingin memesan template di atas. Mohon info untuk proses selanjutnya.`;
-    
-    window.open(`https://wa.me/6281234567890?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(`https://wa.me/6283837958816?text=${encodeURIComponent(message)}`, '_blank');
     
     // Clear cart setelah checkout
     setCart([]);
@@ -380,77 +262,25 @@ export default function AscendiaEcommerce() {
 
   const handleQRIS = () => {
     if (cart.length === 0) {
-      alert('Keranjang belanja Anda kosong!');
+      alert('🛒 Keranjang belanja Anda kosong!');
       return;
     }
     
-    if (!user) {
-      alert('Silakan login terlebih dahulu untuk pembayaran!');
-      setShowAuthModal(true);
-      return;
-    }
+    const orderDetails = cart.map(item =>
+      `- ${item.name} (${item.category}) x${item.quantity} = Rp ${(item.price * item.quantity).toLocaleString()}\n  Deskripsi: ${item.customDescription || 'Tidak ada deskripsi khusus'}`
+    ).join('\n');
     
-    alert('🚀 *FITUR QRIS AKAN SEGERA HADIR!*\n\nUntuk saat ini, silakan gunakan metode checkout via WhatsApp untuk pemesanan. Terima kasih!');
+    const qrisMessage = `💳 *PEMBAYARAN VIA QRIS - ASCENDIA TEMPLATE*\n\n${orderDetails}\n\n*TOTAL: Rp ${cartTotal.toLocaleString()}*\n\nSilakan lakukan pembayaran via QRIS, kemudian kirim bukti transfer ke WhatsApp ini: +62 838-3795-8816\n\nTemplate akan dikirim via email setelah pembayaran dikonfirmasi.`;
     
-    // Simulasi: Clear cart setelah klik QRIS
+    alert('🚀 Fitur QRIS akan segera hadir! Untuk saat ini, silakan gunakan metode WhatsApp untuk pemesanan.');
+    
+    // Untuk simulasi, tetap buka WhatsApp
+    window.open(`https://wa.me/6283837958816?text=${encodeURIComponent(qrisMessage)}`, '_blank');
+    
+    // Clear cart setelah klik QRIS
     setCart([]);
     setCustomDescriptions({});
     setCartOpen(false);
-  };
-
-  // Admin Functions
-  const addNewTemplate = async () => {
-    if (!newTemplate.name.trim()) {
-      alert('Nama template harus diisi!');
-      return;
-    }
-    
-    if (!newTemplate.price || newTemplate.price < 0) {
-      alert('Harga template harus diisi dengan angka yang valid!');
-      return;
-    }
-    
-    try {
-      // Simulasi penambahan template
-      const newTemplateData = {
-        id: templates.length + 1,
-        name: newTemplate.name,
-        price: parseInt(newTemplate.price),
-        category: newTemplate.category,
-        materials: newTemplate.materials,
-        slides: newTemplate.slides,
-        description: newTemplate.description,
-        rating: 0,
-        previewSlides: Array(4).fill(null).map((_, i) => `/images/slide-${i+1}.jpg`),
-        slideDescriptions: newTemplate.slideDescriptions.filter(desc => desc.trim() !== '')
-      };
-      
-      alert(`Template "${newTemplate.name}" berhasil ditambahkan!`);
-      
-      // Reset form
-      setNewTemplate({
-        name: '',
-        price: '',
-        category: 'STANDARD',
-        materials: true,
-        slides: 10,
-        description: '',
-        slideDescriptions: ['', '', '', '']
-      });
-      
-      // Update stats
-      setAdminStats(prev => ({
-        ...prev,
-        totalTemplates: prev.totalTemplates + 1
-      }));
-    } catch (error) {
-      alert('Error menambahkan template: ' + error.message);
-    }
-  };
-
-  const toggleMaintenance = () => {
-    setWebsiteMaintenance(!websiteMaintenance);
-    alert(`Website maintenance mode ${!websiteMaintenance ? 'diaktifkan' : 'dinonaktifkan'}`);
   };
 
   // Components
@@ -493,327 +323,6 @@ export default function AscendiaEcommerce() {
     </span>
   );
 
-  // Admin Dashboard Component
-  const AdminDashboard = () => (
-    <div className="min-h-screen bg-gray-900 pt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
-            <p className="text-gray-400">Kelola template, pesanan, dan website</p>
-          </div>
-          <button
-            onClick={() => setCurrentView('customer')}
-            className="bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-600 flex items-center"
-          >
-            <ArrowRight className="w-4 h-4 mr-2 rotate-180" />
-            Kembali ke Toko
-          </button>
-        </div>
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-gray-800 p-6 rounded-lg border-l-4 border-blue-500">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Total Pesanan</p>
-                <p className="text-2xl font-bold text-white">{adminStats.totalOrders}</p>
-              </div>
-              <Package className="w-8 h-8 text-blue-500" />
-            </div>
-          </div>
-          <div className="bg-gray-800 p-6 rounded-lg border-l-4 border-green-500">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Total Pendapatan</p>
-                <p className="text-2xl font-bold text-white">Rp {adminStats.totalRevenue.toLocaleString()}</p>
-              </div>
-              <BarChart3 className="w-8 h-8 text-green-500" />
-            </div>
-          </div>
-          <div className="bg-gray-800 p-6 rounded-lg border-l-4 border-purple-500">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Template Tersedia</p>
-                <p className="text-2xl font-bold text-white">{adminStats.totalTemplates}</p>
-              </div>
-              <FileText className="w-8 h-8 text-purple-500" />
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Tambah Template Form */}
-          <div className="bg-gray-800 p-6 rounded-lg">
-            <h3 className="text-xl font-bold text-white mb-4 flex items-center">
-              <Plus className="w-5 h-5 mr-2" />
-              Tambah Template Baru
-            </h3>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Nama Template</label>
-                <input
-                  type="text"
-                  placeholder="Contoh: Business Professional"
-                  value={newTemplate.name}
-                  onChange={(e) => setNewTemplate({...newTemplate, name: e.target.value})}
-                  className="w-full p-3 bg-gray-700 border border-gray-600 rounded text-white placeholder-gray-400"
-                />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Harga (Rp)</label>
-                  <input
-                    type="number"
-                    placeholder="10000"
-                    value={newTemplate.price}
-                    onChange={(e) => setNewTemplate({...newTemplate, price: e.target.value})}
-                    className="w-full p-3 bg-gray-700 border border-gray-600 rounded text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Kategori</label>
-                  <select
-                    value={newTemplate.category}
-                    onChange={(e) => setNewTemplate({...newTemplate, category: e.target.value})}
-                    className="w-full p-3 bg-gray-700 border border-gray-600 rounded text-white"
-                  >
-                    <option value="STANDARD">Standard</option>
-                    <option value="PREMIUM">Premium</option>
-                  </select>
-                </div>
-              </div>
-              
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={newTemplate.materials}
-                  onChange={(e) => setNewTemplate({...newTemplate, materials: e.target.checked})}
-                  className="w-4 h-4"
-                  id="materials"
-                />
-                <label htmlFor="materials" className="text-white text-sm">
-                  Include Materials (konten lengkap)
-                </label>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Deskripsi Template</label>
-                <textarea
-                  placeholder="Jelaskan fitur dan keunggulan template..."
-                  value={newTemplate.description}
-                  onChange={(e) => setNewTemplate({...newTemplate, description: e.target.value})}
-                  className="w-full p-3 bg-gray-700 border border-gray-600 rounded text-white placeholder-gray-400"
-                  rows="3"
-                />
-              </div>
-              
-              <button
-                onClick={addNewTemplate}
-                className="w-full bg-blue-600 text-white py-3 rounded font-bold hover:bg-blue-700 transition-colors"
-              >
-                <Plus className="w-4 h-4 inline mr-2" />
-                Tambah Template
-              </button>
-            </div>
-          </div>
-
-          {/* Website Management */}
-          <div className="space-y-6">
-            {/* Maintenance Toggle */}
-            <div className="bg-gray-800 p-6 rounded-lg">
-              <h3 className="text-xl font-bold text-white mb-4 flex items-center">
-                <Settings className="w-5 h-5 mr-2" />
-                Kelola Website
-              </h3>
-              <button
-                onClick={toggleMaintenance}
-                className={`w-full py-3 rounded font-bold ${
-                  websiteMaintenance 
-                    ? 'bg-green-600 hover:bg-green-700' 
-                    : 'bg-yellow-600 hover:bg-yellow-700'
-                } text-white transition-colors`}
-              >
-                {websiteMaintenance ? '✅ Nonaktifkan Maintenance' : '🚧 Aktifkan Maintenance'}
-              </button>
-              <p className="text-gray-400 text-sm mt-2">
-                {websiteMaintenance 
-                  ? 'Website sedang dalam mode maintenance' 
-                  : 'Website aktif untuk pengunjung'}
-              </p>
-            </div>
-            
-            {/* Orders List */}
-            <div className="bg-gray-800 p-6 rounded-lg">
-              <h4 className="font-bold text-white mb-4 flex items-center">
-                <Package className="w-4 h-4 mr-2" />
-                Daftar Pesanan Terbaru
-              </h4>
-              <div className="space-y-3 max-h-60 overflow-y-auto">
-                {orders.length === 0 ? (
-                  <p className="text-gray-400 text-center py-4">Belum ada pesanan</p>
-                ) : (
-                  orders.map(order => (
-                    <div key={order.id} className="bg-gray-700 p-3 rounded border-l-4 border-blue-500">
-                      <div className="flex justify-between items-start mb-2">
-                        <div>
-                          <p className="text-white text-sm font-semibold">Order #{order.id}</p>
-                          <p className="text-gray-300 text-xs">
-                            {order.items.map(item => `${item.name} x${item.quantity}`).join(', ')}
-                          </p>
-                        </div>
-                        <span className={`px-2 py-1 rounded text-xs ${
-                          order.status === 'completed' ? 'bg-green-500' : 'bg-yellow-500'
-                        } text-white`}>
-                          {order.status}
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-white font-bold">Rp {order.total.toLocaleString()}</span>
-                        <span className="text-gray-400 text-xs">
-                          {new Date(order.created_at).toLocaleDateString('id-ID')}
-                        </span>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  // Auth Modal Component
-  const renderAuthModal = () => (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl p-4">
-      <div className="bg-gray-900 p-6 rounded-xl w-full max-w-md border border-gray-700">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-bold text-white">
-            {loginMode === 'login' ? 'Login ke ASCENDIA' : 'Daftar Akun Baru'}
-          </h3>
-          <button 
-            onClick={() => setShowAuthModal(false)} 
-            className="text-gray-400 hover:text-white transition-colors"
-          >
-            <X className="w-6 h-6" />
-          </button>
-        </div>
-        
-        <form onSubmit={handleAuth} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Email
-            </label>
-            <input
-              type="email"
-              placeholder="email@example.com"
-              value={loginEmail}
-              onChange={(e) => setLoginEmail(e.target.value)}
-              className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-colors"
-              required
-            />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Password
-            </label>
-            <input
-              type="password"
-              placeholder="Masukkan password"
-              value={loginPassword}
-              onChange={(e) => setLoginPassword(e.target.value)}
-              className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-colors"
-              required
-            />
-          </div>
-          
-          <button 
-            type="submit" 
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition-colors"
-          >
-            {loginMode === 'login' ? 'Login' : 'Daftar'}
-          </button>
-        </form>
-        
-        <div className="mt-4 text-center">
-          <button 
-            onClick={() => setLoginMode(loginMode === 'login' ? 'signup' : 'login')}
-            className="text-blue-400 hover:text-blue-300 text-sm transition-colors"
-          >
-            {loginMode === 'login' 
-              ? 'Belum punya akun? Daftar di sini' 
-              : 'Sudah punya akun? Login di sini'}
-          </button>
-        </div>
-
-        {/* Info Cara Memesan */}
-        <div className="mt-6 p-4 bg-gray-800 rounded-lg border border-gray-700">
-          <h4 className="font-bold text-white text-sm mb-3 flex items-center">
-            <Shield className="w-4 h-4 mr-2" />
-            Cara Memesan Template:
-          </h4>
-          <ol className="text-gray-300 text-sm space-y-2">
-            <li className="flex items-start">
-              <span className="bg-blue-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">1</span>
-              <span>Login/Daftar akun terlebih dahulu</span>
-            </li>
-            <li className="flex items-start">
-              <span className="bg-blue-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">2</span>
-              <span>Pilih template yang diinginkan</span>
-            </li>
-            <li className="flex items-start">
-              <span className="bg-blue-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">3</span>
-              <span>Tambahkan ke keranjang belanja</span>
-            </li>
-            <li className="flex items-start">
-              <span className="bg-blue-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">4</span>
-              <span>Checkout dan pilih metode pembayaran</span>
-            </li>
-          </ol>
-        </div>
-
-        {/* Demo Accounts */}
-        <div className="mt-4 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
-          <p className="text-yellow-400 text-xs text-center">
-            💡 <strong>Demo Admin:</strong> admin@ascendia.com / password123
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-
-  // Jika dalam mode maintenance
-  if (websiteMaintenance && userRole !== 'admin') {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center p-4">
-        <div className="text-center max-w-md">
-          <TriangleLogo className="w-32 h-32 mx-auto mb-8" />
-          <h1 className="text-4xl font-bold text-white mb-4">🚧 Sedang Maintenance</h1>
-          <p className="text-gray-400 text-lg mb-6">
-            Website sedang dalam perbaikan untuk pengalaman yang lebih baik. Silakan kembali lagi nanti.
-          </p>
-          <div className="bg-gray-800 p-4 rounded-lg border border-gray-700">
-            <p className="text-gray-300 text-sm">
-              Untuk pertanyaan darurat, hubungi:<br />
-              <strong>info@ascendia.com</strong>
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Tampilkan admin dashboard jika user adalah admin
-  if (currentView === 'admin') {
-    return <AdminDashboard />;
-  }
-
-  // Tampilan utama untuk customer
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
@@ -821,29 +330,24 @@ export default function AscendiaEcommerce() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center space-x-12">
-              <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setCurrentView('customer')}>
+              <div className="flex items-center space-x-3">
                 <TriangleLogo />
                 <AscendiaText className="text-2xl font-bold tracking-tight text-white" />
               </div>
               <nav className="hidden lg:flex space-x-8">
-                <a href="#templates" className="text-gray-300 hover:text-white transition-colors">Templates</a>
-                <a href="#pricing" className="text-gray-300 hover:text-white transition-colors">Pricing</a>
-                <a href="#contact" className="text-gray-300 hover:text-white transition-colors">Contact</a>
+                <button onClick={() => document.getElementById('templates')?.scrollIntoView({ behavior: 'smooth' })} className="text-gray-300 hover:text-white transition-colors">
+                  Templates
+                </button>
+                <button onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })} className="text-gray-300 hover:text-white transition-colors">
+                  Pricing
+                </button>
+                <button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} className="text-gray-300 hover:text-white transition-colors">
+                  Contact
+                </button>
               </nav>
             </div>
             
             <div className="flex items-center space-x-4">
-              {/* Admin Switch Button */}
-              {userRole === 'admin' && (
-                <button
-                  onClick={() => setCurrentView('admin')}
-                  className="hidden lg:flex items-center space-x-2 bg-purple-600 px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
-                >
-                  <Settings className="w-4 h-4" />
-                  <span>Admin Panel</span>
-                </button>
-              )}
-
               {/* Cart Button */}
               <button 
                 className="p-2 hover:bg-gray-900 rounded-lg transition relative" 
@@ -857,48 +361,6 @@ export default function AscendiaEcommerce() {
                 )}
               </button>
 
-              {/* User Menu */}
-              {user ? (
-                <div className="relative group">
-                  <button className="p-2 hover:bg-gray-900 rounded-lg transition flex items-center space-x-2">
-                    <User className="w-5 h-5 text-white" />
-                    <span className="text-white hidden sm:block">{user.email.split('@')[0]}</span>
-                    <span className="text-blue-400 text-xs hidden md:block capitalize">({userRole})</span>
-                  </button>
-                  <div className="absolute right-0 mt-2 w-48 bg-gray-900 rounded-lg shadow-lg hidden group-hover:block border border-gray-700 z-50">
-                    <div className="p-3 border-b border-gray-700">
-                      <p className="text-sm text-white truncate">{user.email}</p>
-                      <p className="text-xs text-blue-400 capitalize">{userRole}</p>
-                    </div>
-                    {userRole === 'admin' && (
-                      <button 
-                        onClick={() => setCurrentView('admin')}
-                        className="block w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-800 transition-colors"
-                      >
-                        <Settings className="w-4 h-4 inline mr-2" />
-                        Admin Dashboard
-                      </button>
-                    )}
-                    <button 
-                      onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-gray-300 hover:bg-gray-800 transition-colors"
-                    >
-                      <LogOut className="w-4 h-4 inline mr-2" />
-                      Logout
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <button 
-                  onClick={() => setShowAuthModal(true)}
-                  className="p-2 hover:bg-gray-900 rounded-lg flex items-center space-x-2 transition-colors"
-                >
-                  <User className="w-5 h-5 text-white" />
-                  <span className="text-white hidden sm:block">Login</span>
-                </button>
-              )}
-
-              {/* Mobile Menu Button */}
               <button className="lg:hidden" onClick={() => setMenuOpen(!menuOpen)}>
                 {menuOpen ? <X className="w-6 h-6 text-white" /> : <Menu className="w-6 h-6 text-white" />}
               </button>
@@ -906,9 +368,6 @@ export default function AscendiaEcommerce() {
           </div>
         </div>
       </header>
-
-      {/* Auth Modal */}
-      {showAuthModal && renderAuthModal()}
 
       {/* Cart Sidebar */}
       {cartOpen && (
@@ -959,9 +418,10 @@ export default function AscendiaEcommerce() {
                             value={item.customDescription || ''}
                             onChange={(e) => updateCustomDescription(item.id, e.target.value)}
                             placeholder="Contoh: 
-Slide 1: Company overview...
-Slide 2: Market analysis...
-Slide 3: Financial data..."
+Slide 1: Lorem ipsum dolor sit amet...
+Slide 2: Consectetur adipiscing elit...
+Slide 3: Sed do eiusmod tempor incididunt...
+Slide 4: Ut labore et dolore magna aliqua..."
                             className="w-full p-2 bg-gray-700 text-white text-xs rounded border border-gray-600 focus:border-blue-500 focus:outline-none transition-colors"
                             rows="3"
                           />
@@ -1005,42 +465,34 @@ Slide 3: Financial data..."
                 </div>
                 
                 <div className="space-y-3">
-                  {!user ? (
-                    <button
-                      onClick={() => {
-                        setShowAuthModal(true);
-                        setCartOpen(false);
-                      }}
-                      className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700 transition-colors flex items-center justify-center"
-                    >
-                      <User className="w-5 h-5 mr-2" />
-                      Login untuk Checkout
-                    </button>
-                  ) : (
-                    <>
-                      <button
-                        onClick={handleCheckout}
-                        className="w-full bg-green-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-green-700 transition-colors flex items-center justify-center"
-                      >
-                        <Phone className="w-5 h-5 mr-2" />
-                        Checkout via WhatsApp
-                      </button>
-                      
-                      <button
-                        onClick={handleQRIS}
-                        className="w-full bg-white text-black px-6 py-3 rounded-lg font-bold hover:bg-gray-200 transition-colors flex items-center justify-center"
-                      >
-                        <DollarSign className="w-5 h-5 mr-2" />
-                        Bayar via QRIS
-                      </button>
-                    </>
-                  )}
+                  <button
+                    onClick={handleCheckout}
+                    className="w-full bg-green-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-green-700 transition-colors flex items-center justify-center"
+                  >
+                    <Phone className="w-5 h-5 mr-2" />
+                    Pesan via WhatsApp
+                  </button>
+                  
+                  <button
+                    onClick={handleQRIS}
+                    className="w-full bg-white text-black px-6 py-3 rounded-lg font-bold hover:bg-gray-200 transition-colors flex items-center justify-center"
+                  >
+                    <DollarSign className="w-5 h-5 mr-2" />
+                    Bayar via QRIS
+                  </button>
                 </div>
 
-                <div className="mt-4 text-center">
-                  <p className="text-xs text-gray-400">
-                    * Pesanan akan diproses dalam 1x24 jam
-                  </p>
+                <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+                  <h4 className="font-bold text-blue-400 text-sm mb-2 flex items-center">
+                    <Shield className="w-4 h-4 mr-2" />
+                    Cara Pembayaran:
+                  </h4>
+                  <ol className="text-blue-300 text-xs space-y-1">
+                    <li>1. Pilih metode pembayaran</li>
+                    <li>2. Lakukan pembayaran</li>
+                    <li>3. Kirim bukti ke WhatsApp: +62 838-3795-8816</li>
+                    <li>4. Template dikirim via email dalam 1x24 jam</li>
+                  </ol>
                 </div>
               </div>
             )}
@@ -1055,8 +507,6 @@ Slide 3: Financial data..."
           onClick={() => {
             setPreviewTemplate(null);
             setCurrentSlideIndex(0);
-            setRating(0);
-            setComment('');
           }}
         >
           <div 
@@ -1072,8 +522,6 @@ Slide 3: Financial data..."
                 onClick={() => {
                   setPreviewTemplate(null);
                   setCurrentSlideIndex(0);
-                  setRating(0);
-                  setComment('');
                 }}
                 className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
               >
@@ -1090,19 +538,19 @@ Slide 3: Financial data..."
                   {previewTemplate.previewSlides.length > 0 ? (
                     <div className="space-y-4">
                       <div className="aspect-[4/3] bg-gray-800 rounded-lg overflow-hidden flex items-center justify-center border border-gray-700">
-                        <img
-                          src={previewTemplate.previewSlides[currentSlideIndex]}
-                          alt={`Slide ${currentSlideIndex + 1}`}
-                          className="w-full h-full object-contain"
-                        />
+                        <div className="text-center text-gray-400 p-8">
+                          <FileText className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                          <p>Preview Slide {currentSlideIndex + 1}</p>
+                          <p className="text-sm text-gray-500">Gambar preview akan ditampilkan di sini</p>
+                        </div>
                       </div>
                       
                       <div className="text-center text-gray-400 text-sm">
-                        Slide {currentSlideIndex + 1} of {Math.min(previewTemplate.previewSlides.length, 7)}
+                        Slide {currentSlideIndex + 1} of {Math.min(previewTemplate.previewSlides.length, 4)}
                       </div>
                       
                       <div className="flex justify-center gap-2 mb-4">
-                        {previewTemplate.previewSlides.slice(0, 7).map((_, idx) => (
+                        {previewTemplate.previewSlides.slice(0, 4).map((_, idx) => (
                           <button
                             key={idx}
                             onClick={() => setCurrentSlideIndex(idx)}
@@ -1128,91 +576,89 @@ Slide 3: Financial data..."
                   )}
                 </div>
 
-                {/* Reviews Section */}
+                {/* Template Details */}
                 <div>
-                  <h4 className="font-bold text-white mb-4 text-lg">Ulasan Produk ({reviews.length})</h4>
+                  <h4 className="font-bold text-white mb-4 text-lg">Detail Template</h4>
                   
-                  {reviews.length === 0 ? (
-                    <div className="text-center py-8">
-                      <Star className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-                      <p className="text-gray-500">Belum ada ulasan untuk template ini.</p>
-                      <p className="text-gray-400 text-sm mt-1">Jadilah yang pertama memberikan ulasan!</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-4 max-h-80 overflow-y-auto pr-2">
-                      {reviews.map(review => (
-                        <div key={review.id} className="bg-gray-800 p-4 rounded-lg border border-gray-700">
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center space-x-1">
-                              {[...Array(5)].map((_, i) => (
-                                <span key={i} className="text-yellow-400 text-sm">
-                                  {i < review.rating ? '★' : '☆'}
-                                </span>
-                              ))}
-                            </div>
-                            <span className="text-xs text-gray-400">
-                              {review.profiles?.username || 'Anonymous'}
-                            </span>
-                          </div>
-                          <p className="text-gray-300 text-sm leading-relaxed">{review.comment}</p>
+                  <div className="bg-gray-800 p-6 rounded-lg border border-gray-700 mb-6">
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div>
+                        <p className="text-gray-400 text-sm">Kategori</p>
+                        <p className="text-white font-semibold">{previewTemplate.category}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-400 text-sm">Jumlah Slide</p>
+                        <p className="text-white font-semibold">{previewTemplate.slides} Slides</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-400 text-sm">Materials</p>
+                        <p className="text-white font-semibold">
+                          {previewTemplate.materials ? 'Dengan Materials' : 'Tanpa Materials'}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-gray-400 text-sm">Rating</p>
+                        <div className="flex items-center">
+                          <Star className="w-4 h-4 text-yellow-500 fill-current mr-1" />
+                          <span className="text-white font-semibold">{previewTemplate.rating}</span>
                         </div>
-                      ))}
+                      </div>
                     </div>
-                  )}
-
-                  {/* Review Form */}
-                  <div className="mt-6 border-t border-gray-800 pt-6">
-                    <h4 className="font-bold text-white mb-4 flex items-center">
-                      <Edit3 className="w-4 h-4 mr-2" />
-                      Beri Ulasan
-                    </h4>
                     
-                    {user ? (
-                      <div className="space-y-4">
-                        <div className="flex items-center space-x-1">
-                          {[1,2,3,4,5].map(star => (
-                            <button
-                              key={star}
-                              onClick={() => setRating(star)}
-                              className="text-2xl transition transform hover:scale-110"
-                            >
-                              {star <= rating ? '★' : '☆'}
-                            </button>
+                    <div className="mb-4">
+                      <p className="text-gray-400 text-sm mb-2">Fitur:</p>
+                      <ul className="text-gray-300 text-sm space-y-1">
+                        <li className="flex items-center">
+                          <Check className="w-4 h-4 text-green-500 mr-2" />
+                          Desain {previewTemplate.category === 'PREMIUM' ? 'Premium' : 'Profesional'}
+                        </li>
+                        <li className="flex items-center">
+                          <Check className="w-4 h-4 text-green-500 mr-2" />
+                          {previewTemplate.slides} Slide Unik
+                        </li>
+                        <li className="flex items-center">
+                          <Check className="w-4 h-4 text-green-500 mr-2" />
+                          Format PowerPoint (.pptx)
+                        </li>
+                        {previewTemplate.materials && (
+                          <li className="flex items-center">
+                            <Check className="w-4 h-4 text-green-500 mr-2" />
+                            Konten Materials Lengkap
+                          </li>
+                        )}
+                        {previewTemplate.category === 'PREMIUM' && (
+                          <li className="flex items-center">
+                            <Check className="w-4 h-4 text-green-500 mr-2" />
+                            Priority Support 24/7
+                          </li>
+                        )}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Testimonials */}
+                  <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                    <h5 className="font-bold text-white mb-3">Testimoni Pelanggan</h5>
+                    <div className="space-y-3">
+                      <div className="bg-gray-700 p-3 rounded">
+                        <div className="flex items-center mb-2">
+                          {[...Array(5)].map((_, i) => (
+                            <Star key={i} className="w-3 h-3 text-yellow-500 fill-current" />
                           ))}
-                          <span className="ml-2 text-gray-400 text-sm">{rating}/5 Bintang</span>
                         </div>
-                        
-                        <textarea
-                          value={comment}
-                          onChange={(e) => setComment(e.target.value)}
-                          placeholder="Bagikan pengalaman Anda menggunakan template ini. Apa yang Anda sukai? Apakah mudah digunakan?"
-                          className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-colors"
-                          rows="4"
-                        />
-                        
-                        <button
-                          onClick={submitReview}
-                          disabled={!rating || !comment.trim()}
-                          className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors"
-                        >
-                          Kirim Ulasan
-                        </button>
+                        <p className="text-gray-300 text-sm">"Template sangat profesional dan mudah diedit. Hasil presentasi jadi lebih menarik!"</p>
+                        <p className="text-gray-400 text-xs mt-2">- Business Owner</p>
                       </div>
-                    ) : (
-                      <div className="text-center py-4 bg-gray-800 rounded-lg border border-gray-700">
-                        <User className="w-8 h-8 text-gray-500 mx-auto mb-2" />
-                        <p className="text-gray-400 mb-3">Login untuk memberikan ulasan</p>
-                        <button
-                          onClick={() => {
-                            setPreviewTemplate(null);
-                            setShowAuthModal(true);
-                          }}
-                          className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                        >
-                          Login Sekarang
-                        </button>
+                      <div className="bg-gray-700 p-3 rounded">
+                        <div className="flex items-center mb-2">
+                          {[...Array(5)].map((_, i) => (
+                            <Star key={i} className="w-3 h-3 text-yellow-500 fill-current" />
+                          ))}
+                        </div>
+                        <p className="text-gray-300 text-sm">"Desainnya modern dan sesuai kebutuhan startup saya. Highly recommended!"</p>
+                        <p className="text-gray-400 text-xs mt-2">- Startup Founder</p>
                       </div>
-                    )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1281,16 +727,12 @@ Slide 3: Financial data..."
             </p>
             
             <div className="flex flex-wrap justify-center gap-4">
-              <a href="#templates" className="group bg-white text-black px-8 py-4 rounded-lg font-semibold hover:bg-gray-200 flex items-center transition-all duration-300">
+              <button 
+                onClick={() => document.getElementById('templates')?.scrollIntoView({ behavior: 'smooth' })}
+                className="group bg-white text-black px-8 py-4 rounded-lg font-semibold hover:bg-gray-200 flex items-center transition-all duration-300"
+              >
                 Jelajahi Template
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </a>
-              
-              <button 
-                onClick={() => setShowAuthModal(true)}
-                className="group border border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-black transition-all duration-300"
-              >
-                Daftar Sekarang
               </button>
             </div>
           </div>
@@ -1302,7 +744,7 @@ Slide 3: Financial data..."
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4 text-white">Pricelist</h2>
-            <p className="text-gray-400 text-lg">Harga sederhana dan jelas untuk template profesional pertama Anda</p>
+            <p className="text-gray-400 text-lg">Harga sederhana dan jelas untuk template profesional</p>
           </div>
           
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -1490,7 +932,7 @@ Slide 3: Financial data..."
                     <button
                       onClick={() => {
                         setPreviewTemplate(template);
-                        fetchReviews(template.id);
+                        setCurrentSlideIndex(0);
                       }}
                       className="flex-1 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors"
                     >
@@ -1565,7 +1007,7 @@ Slide 3: Financial data..."
                 </li>
                 <li className="flex items-start">
                   <Phone className="w-5 h-5 mr-3 mt-0.5 flex-shrink-0" />
-                  <span>+62 812-3456-7890</span>
+                  <span>+62 838-3795-8816</span>
                 </li>
               </ul>
             </div>
@@ -1575,19 +1017,23 @@ Slide 3: Financial data..."
               <ul className="space-y-2 text-gray-400 text-sm">
                 <li className="flex items-start">
                   <span className="bg-blue-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">1</span>
-                  <span>Login/Daftar akun terlebih dahulu</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="bg-blue-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">2</span>
                   <span>Pilih template yang diinginkan</span>
                 </li>
                 <li className="flex items-start">
+                  <span className="bg-blue-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">2</span>
+                  <span>Tambahkan ke keranjang belanja</span>
+                </li>
+                <li className="flex items-start">
                   <span className="bg-blue-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">3</span>
-                  <span>Tambahkan ke keranjang & checkout</span>
+                  <span>Checkout dan pilih metode pembayaran</span>
                 </li>
                 <li className="flex items-start">
                   <span className="bg-blue-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">4</span>
-                  <span>Pilih metode pembayaran</span>
+                  <span>Kirim bukti pembayaran ke WhatsApp</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="bg-blue-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">5</span>
+                  <span>Template dikirim via email</span>
                 </li>
               </ul>
             </div>
@@ -1599,15 +1045,15 @@ Slide 3: Financial data..."
                 © 2025 ASCENDIA. All rights reserved.
               </p>
               <div className="flex space-x-6 mt-4 md:mt-0">
-                <a href="#" className="text-gray-500 hover:text-white text-sm transition-colors">
+                <button className="text-gray-500 hover:text-white text-sm transition-colors">
                   Terms
-                </a>
-                <a href="#" className="text-gray-500 hover:text-white text-sm transition-colors">
+                </button>
+                <button className="text-gray-500 hover:text-white text-sm transition-colors">
                   Privacy
-                </a>
-                <a href="#" className="text-gray-500 hover:text-white text-sm transition-colors">
+                </button>
+                <button className="text-gray-500 hover:text-white text-sm transition-colors">
                   Cookies
-                </a>
+                </button>
               </div>
             </div>
           </div>
