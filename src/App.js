@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   ShoppingCart, Menu, X, Star, Check, Phone, Mail,  
   ArrowRight, Plus, Minus, Trash2, ExternalLink, DollarSign,
-  FileText, Package, Shield
+  FileText, Shield
 } from 'lucide-react';
 
 export default function AscendiaEcommerce() {
